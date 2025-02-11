@@ -1,13 +1,10 @@
-const express = require("express");
-const cors = require("cors");
-const passport = require("passport");
+require('./db_init');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+
 const app = express();
 app.use(express.json());
-app.use(passport.initialize());
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-  })
-);
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 module.exports = app;
