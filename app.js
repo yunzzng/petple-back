@@ -6,6 +6,7 @@ const errorHandler = require('./src/middleware/errorHandler');
 const userRoutes = require('./src/routes/user/user.routes');
 const oauthRoutes = require('./src/routes/oauth/oauth.routes');
 const imageRoutes = require('./src/routes/image/image.route');
+const postsRoutes = require('./src/routes/post/post.router');
 
 const app = express();
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(cookieParser());
 app.use('/api/user', userRoutes);
 app.use('/api/oauth', oauthRoutes);
 app.use('/api/images', imageRoutes);
+app.use('/api/posts', postsRoutes);
 
 //에러핸들러
 app.use(errorHandler);
