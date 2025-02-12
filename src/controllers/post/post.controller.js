@@ -2,7 +2,7 @@ const PostService = require('../../service/post/post.service');
 
 class PostController {
   async addPost(req, res, next) {
-    const userId = '67ac7df46fa39327495f1515';
+    const { _id: userId } = req.user;
     const { tags, images, description } = req.body;
     try {
       await PostService.createPost(tags, images, description, userId);
