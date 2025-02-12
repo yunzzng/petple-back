@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const petSchema = require('./pet.schema');
+const petSchema = require('../pet/pet.schema');
 
 const userSchema = new mongoose.Schema(
   {
@@ -10,10 +10,11 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     nickName: {
       type: String,
-      required: true,
+      required: false,
     },
     password: {
       type: String,
