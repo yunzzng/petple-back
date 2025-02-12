@@ -5,4 +5,9 @@ const createToken = ({ email, userId }) => {
   return jwt.sign({ email, userId }, config.jwt.secret, { expiresIn: '1h' });
 };
 
-module.exports = { createToken };
+const verifyToken = (token) => {
+  console.log(token);
+  return jwt.verify(token, config.jwt.secret);
+};
+
+module.exports = { createToken, verifyToken };

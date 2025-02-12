@@ -7,6 +7,7 @@ const userRoutes = require('./src/routes/user/user.routes');
 const oauthRoutes = require('./src/routes/oauth/oauth.routes');
 const imageRoutes = require('./src/routes/image/image.route');
 const postsRoutes = require('./src/routes/post/post.router');
+const { token } = require('./src/middleware/token.middleware');
 
 const app = express();
 app.use(express.json());
