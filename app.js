@@ -16,7 +16,6 @@ app.use(cookieParser());
 app.use('/api/user', userRoutes);
 app.use('/api/oauth', oauthRoutes);
 app.use('/api/images', imageRoutes);
-app.use('/');
 
 //에러핸들러
 app.use(errorHandler);
