@@ -2,7 +2,7 @@ require('./db_init');
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const errorHandler = require('./middleware/errorHandler');
+const errorHandler = require('./src/middleware/errorHandler');
 const userRoutes = require('./src/routes/user/user.routes');
 const oauthRoutes = require('./src/routes/oauth/oauth.routes');
 const imageRoutes = require('./src/routes/image/image.route');
