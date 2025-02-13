@@ -18,7 +18,6 @@ const signup = async (req, res, next) => {
     const existingUser = await findByEmail(email);
 
     const randomNickname = await createNickname(name);
-    console.log(randomNickname);
 
     if (existingUser) {
       const error = new Error('이미 존재하는 이메일');

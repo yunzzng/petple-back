@@ -14,8 +14,6 @@ const googleOauthCallback = async (req, res, next) => {
   if (!code) {
     return res.status(400).json({ message: '코드 없음' });
   }
-
-  console.log(code);
 };
 
 module.exports = {
