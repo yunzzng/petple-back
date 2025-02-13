@@ -13,7 +13,6 @@ const token = async (req, res, next) => {
     }
 
     const decodedToken = await verifyToken(token);
-    console.log(decodedToken);
 
     const email = decodedToken.email;
 
@@ -25,7 +24,6 @@ const token = async (req, res, next) => {
     }
 
     req.user = user;
-    console.log('user인증 성공', user);
 
     next();
   } catch (error) {
