@@ -18,4 +18,4 @@ const petSchema = new mongoose.Schema({
   },
 });
 
-module.exports = petSchema;
+module.exports = mongoose.model('pets', petSchema);
