@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const petSchema = require('../pet/pet.schema');
+const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = new mongoose.Schema(
   {
@@ -24,14 +24,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    userPet: {
-      type: petSchema,
-      required: false,
-    },
+    userPet: [
+      {
+        type: ObjectId,
+        required: false,
+        ref: 'Pet',
+      },
+    ],
   },
   {
     timestamps: true,
   },
 );
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('users', userSchema);
