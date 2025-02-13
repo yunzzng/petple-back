@@ -6,7 +6,6 @@ const createToken = ({ email, userId }) => {
 };
 
 const verifyToken = (token) => {
-  console.log(token);
   return jwt.verify(token, config.jwt.secret);
 };
 
