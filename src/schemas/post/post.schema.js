@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { String, ObjectId, Number } = mongoose.Schema.Types;
+const { String, ObjectId } = mongoose.Schema.Types;
 
 const postSchema = new mongoose.Schema(
   {
