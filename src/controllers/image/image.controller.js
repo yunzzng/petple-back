@@ -2,6 +2,7 @@ const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { PutObjectCommand } = require('@aws-sdk/client-s3');
 const config = require('../../consts/app');
 const AWS_S3 = require('../../config/awsS3.config');
+const { createError } = require('../../utils/error');
 
 const getPresignedUrl = async (req, res, next) => {
   const { fileName, fileType } = req.query;
