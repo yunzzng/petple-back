@@ -20,7 +20,9 @@ class PostService {
 
   async getPostById(postId) {
     try {
-      const document = await Post.findById(postId).populate('creator');
+      const document = await Post.findById(postId)
+        .populate('creator')
+        .populate('comments');
       return document;
     } catch (error) {
       throw new Error(`[DB에러] PostService.getPostById`, { cause: error });
