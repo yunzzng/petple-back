@@ -2,14 +2,19 @@ const PostService = require('../../service/post/post.service');
 const { createError } = require('../../utils/error');
 
 class PostController {
-  async addPost(req, res, next) {
-    const { _id: userId } = req.user;
-    const { tags, images, description } = req.body;
+  async getPosts(req, res, next) {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 3;
     try {
-      await PostService.createPost(tags, images, description, userId);
-      return res
-        .status(201)
-        .json({ success: true, message: '게시글 작성에 성공하였습니다.' });
+      const [posts, totalPostsCount] = await PostService.getPosts(page, limit);
+      const totalPage = Math.ceil(totalPostsCount / limit);
+      const pageInfo = {
+        totalPage,
+        currentPage: page,
+        nextPage: page + 1 > totalPage ? null : page + 1,
+        prevPage: page - 1 === 0 ? page : page - 1,
+      };
+      return res.status(200).json({ success: true, pageInfo, posts });
     } catch (error) {
       next(error);
     }
@@ -25,6 +30,19 @@ class PostController {
       return res.status(200).json({ success: true, post });
     } catch (error) {
       next(createError(500, `게시글을 가져오는데 실패하였습니다. ${error}`));
+    }
+  }
+
+  async addPost(req, res, next) {
+    const { _id: userId } = req.user;
+    const { tags, images, description } = req.body;
+    try {
+      await PostService.createPost(tags, images, description, userId);
+      return res
+        .status(201)
+        .json({ success: true, message: '게시글 작성에 성공하였습니다.' });
+    } catch (error) {
+      next(error);
     }
   }
 

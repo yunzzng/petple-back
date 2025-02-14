@@ -1,6 +1,23 @@
 const Post = require('../../schemas/post/post.schema');
 
 class PostService {
+  async getPosts(page, limit) {
+    const skip = (page - 1) * limit;
+    try {
+      const [posts, totalPostsCount] = await Promise.all([
+        Post.find() //
+          .populate('creator')
+          .skip(skip)
+          .limit(limit)
+          .lean(),
+        Post.countDocuments(),
+      ]);
+      return [posts, totalPostsCount];
+    } catch (error) {
+      throw new Error(`[DB에러] PostService.getPosts`, { cause: error });
+    }
+  }
+
   async getPostById(postId) {
     try {
       const document = await Post.findById(postId).populate('creator');
