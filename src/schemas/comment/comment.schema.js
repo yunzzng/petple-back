@@ -1,6 +1,44 @@
 const mongoose = require('mongoose');
 const { String, ObjectId, Boolean } = mongoose.Schema.Types;
 
+const replySchema = new mongoose.Schema(
+  {
+    creatorId: {
+      type: ObjectId,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    nickName: {
+      type: String,
+      required: true,
+    },
+    profileImage: {
+      type: String,
+      default: '',
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    tag: {
+      type: String,
+      default: null,
+    },
+    hasParent: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { timestamps: true },
+);
+
 const commentSchema = new mongoose.Schema(
   {
     creator: {
@@ -16,46 +54,8 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    reply: {
-      type: [
-        {
-          _id: {
-            type: ObjectId,
-            required: true,
-          },
-          name: {
-            type: String,
-            required: true,
-          },
-          nickName: {
-            type: String,
-            required: true,
-          },
-          profileImage: {
-            type: String,
-            default: '',
-          },
-          email: {
-            type: String,
-            required: true,
-          },
-          description: {
-            type: String,
-            required: true,
-          },
-          tag: {
-            type: String,
-            default: null,
-          },
-          hasParent: {
-            type: Boolean,
-            default: true,
-          },
-        },
-        {
-          timestamps: true,
-        },
-      ],
+    replies: {
+      type: [replySchema],
       default: [],
     },
     hasParent: {
