@@ -49,6 +49,18 @@ class PostService {
     }
   }
 
+  async updatePostCommentsFiled(id, commentId) {
+    try {
+      await Post.findByIdAndUpdate(id, {
+        $push: { comments: commentId },
+      });
+    } catch (erorr) {
+      throw new Error(`[DB에러 PostService.updatePostCommentsFiled]`, {
+        cause: error,
+      });
+    }
+  }
+
   async deletePostById(id) {
     try {
       await Post.findByIdAndDelete(id);

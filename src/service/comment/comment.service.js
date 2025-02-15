@@ -21,7 +21,7 @@ class CommentService {
   ) {
     try {
       const document = await Comment.findByIdAndUpdate(commentId, {
-        $addToSet: {
+        $push: {
           replies: {
             creatorId,
             name,

@@ -21,7 +21,7 @@ class CommentController {
         description,
         hasParent,
       );
-      await postService.updatePostById(postId, { comments: comment._id });
+      await postService.updatePostCommentsFiled(postId, comment._id);
       return res.status(200).json({ success: true, comment });
     } catch (error) {
       next(error);
