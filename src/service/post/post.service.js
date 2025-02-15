@@ -22,7 +22,11 @@ class PostService {
     try {
       const document = await Post.findById(postId)
         .populate('creator')
-        .populate('comments');
+        .populate({
+          path: 'comments',
+          populate: { path: 'creator' },
+        })
+        .lean();
       return document;
     } catch (error) {
       throw new Error(`[DB에러] PostService.getPostById`, { cause: error });
