@@ -10,5 +10,10 @@ commentRoutes.delete(
   token,
   CommentController.deleteReply,
 );
+commentRoutes.patch(
+  '/:commentId/replies/:replyId',
+  token,
+  CommentController.updateReply,
+);
 
 module.exports = commentRoutes;

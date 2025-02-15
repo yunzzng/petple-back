@@ -48,6 +48,25 @@ class CommentService {
       throw new Error('[DB에러] CommentService.deleteReply', { cause: error });
     }
   }
+
+  async updateReply(commentId, replyId, description) {
+    console.log({ commentId, replyId, description });
+    try {
+      await Comment.findOneAndUpdate(
+        {
+          _id: commentId,
+          'replies._id': replyId,
+        },
+        {
+          $set: {
+            'replies.$.description': description,
+          },
+        },
+      );
+    } catch (error) {
+      throw new Error('[DB에러] CommentService.updateReply', { cause: error });
+    }
+  }
 }
 
 module.exports = new CommentService();
