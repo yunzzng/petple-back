@@ -107,7 +107,7 @@ class UserController {
     const user = await findByEmail(email);
     console.log(user);
     if (!user) {
-      throw createError(404, '유저 정보가 없습니다.');
+      throw createError(404, '유저 정보가 없습니다!');
     }
 
     res.status(200).json({
