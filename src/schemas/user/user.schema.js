@@ -31,6 +31,12 @@ const userSchema = new mongoose.Schema(
         ref: 'Pet',
       },
     ],
+    userType: {
+      type: String,
+      required: true,
+      enum: ['local', 'google'],
+      default: 'local',
+    },
   },
   {
     timestamps: true,
