@@ -43,7 +43,21 @@ class CommentController {
       });
       return res.status(200).json({ success: true, message: '답글 성공' });
     } catch (error) {
-      console.log(error);
+      next(error);
+    }
+  }
+
+  async deleteReply(req, res, next) {
+    const { commentId, replyId } = req.params;
+    if (!commentId || !replyId) {
+      next(createError(400, '댓글 정보가 필요합니다.'));
+    }
+    try {
+      await CommentService.deleteReply(commentId, replyId);
+      return res
+        .status(200)
+        .json({ success: true, message: '답글을 살제 하였습니다.' });
+    } catch (error) {
       next(error);
     }
   }

@@ -17,13 +17,13 @@ class CommentService {
 
   async addReply(
     commentId,
-    { _id, name, nickname, profileImage, email, description, tag },
+    { _id: creatorId, name, nickname, profileImage, email, description, tag },
   ) {
     try {
       const document = await Comment.findByIdAndUpdate(commentId, {
         $addToSet: {
-          reply: {
-            _id,
+          replies: {
+            creatorId,
             name,
             nickname,
             profileImage,
@@ -36,6 +36,16 @@ class CommentService {
       return document;
     } catch (error) {
       throw new Error(`[DB에러] CommentService.addReply`, { cause: error });
+    }
+  }
+
+  async deleteReply(commentId, replyId) {
+    try {
+      await Comment.findByIdAndUpdate(commentId, {
+        $pull: { replies: { _id: replyId } },
+      });
+    } catch (error) {
+      throw new Error('[DB에러] CommentService.deleteReply', { cause: error });
     }
   }
 }

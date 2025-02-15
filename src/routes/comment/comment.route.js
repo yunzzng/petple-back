@@ -5,5 +5,10 @@ const commentRoutes = require('express').Router();
 
 commentRoutes.post('/', token, CommentController.addComment);
 commentRoutes.post('/reply', token, CommentController.addReply);
+commentRoutes.delete(
+  '/:commentId/replies/:replyId',
+  token,
+  CommentController.deleteReply,
+);
 
 module.exports = commentRoutes;
