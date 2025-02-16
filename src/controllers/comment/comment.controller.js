@@ -1,5 +1,5 @@
 const CommentService = require('../../service/comment/comment.service');
-const postService = require('../../service/post/post.service');
+const PostService = require('../../service/post/post.service');
 const { createError } = require('../../utils/error');
 
 class CommentController {
@@ -21,23 +21,8 @@ class CommentController {
         description,
         hasParent,
       );
-      await postService.updatePostCommentsFiled(postId, comment._id);
+      await PostService.updatePostCommentsField(postId, comment._id);
       return res.status(200).json({ success: true, comment });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async deleteComment(req, res, next) {
-    const { id } = req.params;
-    if (!id) {
-      return next(createError(400, '댓글 정보가 필요합니다.'));
-    }
-    try {
-      await CommentService.deleteComment(id);
-      return res
-        .status(200)
-        .json({ success: true, message: '댓글을 삭제 하였습니다.' });
     } catch (error) {
       next(error);
     }
