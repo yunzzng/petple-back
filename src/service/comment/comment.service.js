@@ -15,6 +15,16 @@ class CommentService {
     }
   }
 
+  async deleteComment(id) {
+    try {
+      await Comment.findByIdAndDelete(id);
+    } catch (error) {
+      throw new Error(`[DB에러] CommentService.deleteComment`, {
+        cause: error,
+      });
+    }
+  }
+
   async addReply(
     commentId,
     { _id: creatorId, name, nickname, profileImage, email, description, tag },
