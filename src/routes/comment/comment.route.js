@@ -5,6 +5,7 @@ const commentRoutes = require('express').Router();
 
 commentRoutes.post('/', token, CommentController.addComment);
 commentRoutes.delete('/:id', token, CommentController.deleteComment);
+commentRoutes.patch('/:id', token, CommentController.updateComment);
 commentRoutes.post('/reply', token, CommentController.addReply);
 commentRoutes.delete(
   '/:commentId/replies/:replyId',

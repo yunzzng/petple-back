@@ -25,6 +25,16 @@ class CommentService {
     }
   }
 
+  async updateComment(id, description) {
+    try {
+      await Comment.findByIdAndUpdate(id, { description });
+    } catch (error) {
+      throw new Error(`[DB에러] CommentService.updateComment`, {
+        cause: error,
+      });
+    }
+  }
+
   async addReply(
     commentId,
     { _id: creatorId, name, nickname, profileImage, email, description, tag },
@@ -60,7 +70,6 @@ class CommentService {
   }
 
   async updateReply(commentId, replyId, description) {
-    console.log({ commentId, replyId, description });
     try {
       await Comment.findOneAndUpdate(
         {

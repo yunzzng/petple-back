@@ -43,6 +43,22 @@ class CommentController {
     }
   }
 
+  async updateComment(req, res, next) {
+    const { id } = req.params;
+    const { description } = req.body;
+    if (!id) {
+      return next(createError(400, '댓글 정보가 필요합니다.'));
+    }
+    try {
+      await CommentService.updateComment(id, description);
+      return res
+        .status(200)
+        .json({ success: true, message: '댓글을 수정 하였습니다.' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async addReply(req, res, next) {
     const user = req.user;
     const { targetCommentId, description, tag } = req.body;
@@ -89,7 +105,6 @@ class CommentController {
         .status(200)
         .json({ success: true, message: '답글을 살제 하였습니다.' });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
