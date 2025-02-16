@@ -20,7 +20,13 @@ class PostService {
 
   async getPostById(postId) {
     try {
-      const document = await Post.findById(postId).populate('creator');
+      const document = await Post.findById(postId)
+        .populate('creator')
+        .populate({
+          path: 'comments',
+          populate: { path: 'creator' },
+        })
+        .lean();
       return document;
     } catch (error) {
       throw new Error(`[DB에러] PostService.getPostById`, { cause: error });
@@ -40,6 +46,43 @@ class PostService {
       await Post.findByIdAndUpdate(id, post);
     } catch (error) {
       throw new Error(`[DB에러 PostService.updatePostById]`, { cause: error });
+    }
+  }
+
+  async updatePostCommentsField(id, commentId) {
+    try {
+      await Post.findByIdAndUpdate(id, {
+        $push: { comments: commentId },
+      });
+    } catch (error) {
+      throw new Error(`[DB에러] PostService.updatePostCommentsField`, {
+        cause: error,
+      });
+    }
+  }
+
+  async updatePostLikesField(postId, userId, likeStatus) {
+    const query = likeStatus
+      ? { $push: { likes: userId } }
+      : { $pull: { likes: userId } };
+    try {
+      await Post.findByIdAndUpdate(postId, query);
+    } catch (error) {
+      throw new Error(`[DB에러] PostService.updatePostLikesField`, {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteComment(postId, commentId) {
+    try {
+      await Post.findByIdAndUpdate(postId, {
+        $pull: { comments: commentId },
+      });
+    } catch (error) {
+      throw new Error(`[DB에러] PostService.deleteComment`, {
+        cause: error,
+      });
     }
   }
 

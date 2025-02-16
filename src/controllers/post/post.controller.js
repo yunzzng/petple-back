@@ -1,3 +1,4 @@
+const CommentService = require('../../service/comment/comment.service');
 const PostService = require('../../service/post/post.service');
 const { createError } = require('../../utils/error');
 
@@ -85,6 +86,39 @@ class PostController {
         .json({ success: true, message: '게시글 삭제 성공' });
     } catch (error) {
       next(createError(500, `게시글 업데이트에 실패하였습니다. ${error}`));
+    }
+  }
+
+  async deleteComment(req, res, next) {
+    const { postId, commentId } = req.params;
+    if (!postId || !commentId) {
+      return next(createError(400, '데이터 정보가 부족합니다.'));
+    }
+    try {
+      await PostService.deleteComment(postId, commentId);
+      await CommentService.deleteComment(commentId);
+      return res
+        .status(200)
+        .json({ success: true, message: '댓글 정보를 삭제하였습니다.' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updatePostLikesField(req, res, next) {
+    const { id: postId } = req.params;
+    const user = req.user;
+    const { likeStatus } = req.body;
+    if (!postId || likeStatus === undefined) {
+      return next(createError(400, '업데이트에 필요한 정보가 부족합니다.'));
+    }
+    try {
+      await PostService.updatePostLikesField(postId, user._id, likeStatus);
+      return res
+        .status(200)
+        .json({ success: true, message: '게시글 정보를 수정하였습니다.' });
+    } catch (error) {
+      next(error);
     }
   }
 }

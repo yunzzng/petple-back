@@ -1,10 +1,49 @@
 const mongoose = require('mongoose');
-const { String, ObjectId } = mongoose.Schema.Types;
+const { String, ObjectId, Boolean } = mongoose.Schema.Types;
+
+const replySchema = new mongoose.Schema(
+  {
+    creatorId: {
+      type: ObjectId,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    nickName: {
+      type: String,
+      required: true,
+    },
+    profileImage: {
+      type: String,
+      default: '',
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    tag: {
+      type: String,
+      default: null,
+    },
+    hasParent: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { timestamps: true },
+);
 
 const commentSchema = new mongoose.Schema(
   {
     creator: {
       type: ObjectId,
+      ref: 'users',
       required: true,
     },
     post: {
@@ -15,9 +54,13 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    reply: {
-      type: [ObjectId],
+    replies: {
+      type: [replySchema],
       default: [],
+    },
+    hasParent: {
+      type: Boolean,
+      default: false,
     },
   },
   {
