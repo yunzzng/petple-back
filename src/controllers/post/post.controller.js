@@ -104,6 +104,23 @@ class PostController {
       next(error);
     }
   }
+
+  async updatePostLikesField(req, res, next) {
+    const { id: postId } = req.params;
+    const user = req.user;
+    const { likeStatus } = req.body;
+    if (!postId || likeStatus === undefined) {
+      return next(createError(400, '업데이트에 필요한 정보가 부족합니다.'));
+    }
+    try {
+      await PostService.updatePostLikesField(postId, user._id, likeStatus);
+      return res
+        .status(200)
+        .json({ success: true, message: '게시글 정보를 수정하였습니다.' });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PostController();

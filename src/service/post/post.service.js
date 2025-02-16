@@ -61,6 +61,19 @@ class PostService {
     }
   }
 
+  async updatePostLikesField(postId, userId, likeStatus) {
+    const query = likeStatus
+      ? { $push: { likes: userId } }
+      : { $pull: { likes: userId } };
+    try {
+      await Post.findByIdAndUpdate(postId, query);
+    } catch (error) {
+      throw new Error(`[DB에러] PostService.updatePostLikesField`, {
+        cause: error,
+      });
+    }
+  }
+
   async deleteComment(postId, commentId) {
     try {
       await Post.findByIdAndUpdate(postId, {

@@ -12,5 +12,6 @@ postsRoutes.delete(
   token,
   PostController.deleteComment,
 );
+postsRoutes.patch('/post/:id', token, PostController.updatePostLikesField);
 
 module.exports = postsRoutes;
