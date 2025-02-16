@@ -35,11 +35,28 @@ const createNickname = async (userName) => {
   const randomEmotion = emotion[Math.floor(Math.random() * emotion.length)];
   const randomNum = Math.floor(Math.random() * 9000 + 1);
 
-  return `${randomEmotion}${userName}${randomNum}`;
+  const randomNickname = `${randomEmotion}${userName}${randomNum}`;
+
+  const checkNickname = await duplication(randomNickname);
+
+  if (checkNickname) {
+    return randomNickname;
+  }
+  return await createNickname(userName);
+};
+
+const duplication = async (userNickName) => {
+  const nickName = await users.findOne({ nickName: userNickName });
+
+  if (nickName) {
+    return false;
+  }
+  return true;
 };
 
 module.exports = {
   createUser,
   findByEmail,
   createNickname,
+  duplication,
 };

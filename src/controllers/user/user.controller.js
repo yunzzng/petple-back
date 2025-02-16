@@ -2,6 +2,7 @@ const {
   createUser,
   findByEmail,
   createNickname,
+  duplication,
 } = require('../../service/user/user.service');
 const crypto = require('crypto');
 const { createToken, verifyToken } = require('../../consts/token');
@@ -119,6 +120,19 @@ class UserController {
         image: user.profileImage,
       }, // 펫 정보 추가
     });
+  }
+
+  async nickNameConfirm(req, res, next) {
+    const { nickName } = req.body;
+
+    const confirm = await duplication(nickName);
+
+    if (!confirm) {
+      const error = new Error('이미 사용중인 닉네임 입니다.');
+      error.status(409);
+      return next(error);
+    }
+    return res.status(200).json({ message: '사용 가능한 닉네임 입니다.' });
   }
 }
 
