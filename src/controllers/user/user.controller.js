@@ -145,8 +145,7 @@ class UserController {
   }
 
   async updateUserInfo(req, res, next) {
-    const { userNickName, profileImg } = req.body;
-    const { token } = req.cookies;
+    const { userNickName, profileImg, userEmail } = req.body;
 
     try {
       if (!token) {
@@ -154,9 +153,6 @@ class UserController {
         error.status = 400;
         return next(error);
       }
-
-      const decodedToken = await verifyToken(token);
-      const userEmail = decodedToken.email;
 
       const updateInfo = await users.findOneAndUpdate(
         { email: userEmail },
