@@ -6,6 +6,7 @@ class PostService {
     try {
       const [posts, totalPostsCount] = await Promise.all([
         Post.find() //
+          .sort({ createdAt: -1 })
           .populate('creator')
           .skip(skip)
           .limit(limit)
