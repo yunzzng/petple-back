@@ -26,8 +26,8 @@ class PlaceController {
         title: item.title,
         imageUrl: item.firstimage ?? null,
         address: item.addr1 ?? "정보 없음",
-        lat: item.mapy ? Number(item.mapy) : null,
-        lng: item.mapx ? Number(item.mapx) : null,
+        lat: item.mapy ?? null,
+        lng: item.mapx ?? null,
         tel: item.tel ?? "정보 없음",
       }));
 
