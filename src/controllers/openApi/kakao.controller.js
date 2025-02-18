@@ -33,20 +33,20 @@ class KakaoController {
         return { lat: null, lng: null };
       }
     } catch (error) {
-      throw createError(500, `좌표 변환 오류: ${error.message}`);
+      next(error);
     }
   }
 
   // 카카오 지도 API
   getMapScriptUrl(req, res, next) {
     try {
-      if (!config.kakao.apiUrl || !config.kakao.apiKey) {
+      if (!config.kakao.apiUrl ?? !config.kakao.apiKey) {
         throw createError(500, '카카오 지도 API 설정 오류');
       }
       const scriptUrl = `${config.kakao.apiUrl}${config.kakao.apiKey}&autoload=false`;
       return res.json({ success: true, scriptUrl });
     } catch (error) {
-      next(createError(500, `데이터 요청 실패: ${error.message}`));
+      next(error);
     }
   }
 }
