@@ -57,21 +57,6 @@ class PlaceController {
 
       item = Array.isArray(item) ? item[0] : item;
 
-      const lat = item.mapy && !isNaN(item.mapy) ? Number(item.mapy) : null;
-      const lng = item.mapx && !isNaN(item.mapx) ? Number(item.mapx) : null;
-
-      if (!lat || !lng) {
-        const placesResponse = await axios.get(`${config.externalData.baseUrls.place}`, {
-          params: { numOfRows: 1, pageNo: 1, contentTypeId: item.contentid },
-        });
-        const placeItem = placesResponse.data?.response?.body?.items?.item?.[0];
-
-        if (placeItem) {
-          lat = lat || Number(placeItem.mapy);
-          lng = lng || Number(placeItem.mapx);
-        }
-      }
-
       const formattedData = {
         additionalInfo: {
           acmpyNeedMtr: item.acmpyNeedMtr ?? "정보 없음",
