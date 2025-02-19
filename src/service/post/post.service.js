@@ -1,4 +1,5 @@
 const Post = require('../../schemas/post/post.schema');
+const { createError } = require('../../utils/error');
 
 class PostService {
   async getPosts(page, limit) {
@@ -6,6 +7,7 @@ class PostService {
     try {
       const [posts, totalPostsCount] = await Promise.all([
         Post.find() //
+          .sort({ createdAt: -1 })
           .populate('creator')
           .skip(skip)
           .limit(limit)
@@ -15,6 +17,36 @@ class PostService {
       return [posts, totalPostsCount];
     } catch (error) {
       throw new Error(`[DB에러] PostService.getPosts`, { cause: error });
+    }
+  }
+
+  async getPopularPosts() {
+    try {
+      const documents = await Post.aggregate([
+        {
+          $addFields: { likesCount: { $size: '$likes' } },
+        },
+        {
+          $sort: { likesCount: -1 },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'creator',
+            foreignField: '_id',
+            as: 'creator',
+          },
+        },
+        {
+          $unwind: '$creator',
+        },
+        {
+          $limit: 10,
+        },
+      ]);
+      return documents;
+    } catch (error) {
+      throw createError(500, '[DB에러 PostSerice.getPopularPosts]');
     }
   }
 

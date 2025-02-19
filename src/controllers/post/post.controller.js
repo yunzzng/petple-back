@@ -21,6 +21,18 @@ class PostController {
     }
   }
 
+  async getPopularPosts(_req, res, next) {
+    try {
+      const posts = await PostService.getPopularPosts();
+      if (posts === null) {
+        throw createError(404, '게시글 정보가 없습니다.');
+      }
+      return res.status(200).json({ success: true, posts });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getPost(req, res, next) {
     const { id } = req.params;
     if (!id) {
