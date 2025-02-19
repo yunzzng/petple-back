@@ -9,7 +9,7 @@ class MedicalController {
       const { region, type } = req.query;
 
       if (!region || !type) {
-        return next(createError(400, '지역과 종류(type)가 필요합니다.'));
+        throw createError(400, '지역과 종류(type)가 필요합니다.');
       }
 
       const apiUrls = {
@@ -24,7 +24,7 @@ class MedicalController {
       };
 
       if (!apiUrls[region] || !apiUrls[region][type]) {
-        return next(createError(400, '유효한 지역 또는 유형이 아닙니다.'));
+        throw createError(400, '유효한 지역 또는 유형이 아닙니다.');
       }
 
       const apiUrl = apiUrls[region][type];
@@ -70,7 +70,7 @@ class MedicalController {
 
       return res.status(200).json({ success: true, medicalData: formattedData });
     } catch (error) {
-      next(createError(500, `데이터 요청 실패: ${error.message}`));
+      next(error);
     }
   }
 }
