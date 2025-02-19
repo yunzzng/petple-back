@@ -30,6 +30,17 @@ class PostService {
           $sort: { likesCount: -1 },
         },
         {
+          $lookup: {
+            from: 'users',
+            localField: 'creator',
+            foreignField: '_id',
+            as: 'creator',
+          },
+        },
+        {
+          $unwind: '$creator',
+        },
+        {
           $limit: 10,
         },
       ]);
