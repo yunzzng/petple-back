@@ -19,7 +19,7 @@ class OauthController {
     const { code } = req.query;
 
     if (!code) {
-      createError(400, '코드 없음');
+      throw createError(400, '코드 없음');
     }
 
     try {
@@ -35,7 +35,6 @@ class OauthController {
       );
 
       const { access_token } = tokenResponse.data;
-      console.log('access_token', access_token);
 
       const userResponse = await axios.get(
         'https://www.googleapis.com/oauth2/v2/userinfo',
@@ -81,8 +80,6 @@ class OauthController {
           maxAge: 60 * 60 * 1000,
           path: '/', //모든 경로에 쿠키포함
         });
-
-        console.log('구글 회원가입,로그인 성공');
 
         return res.redirect(`http://localhost:5173/`);
       }
