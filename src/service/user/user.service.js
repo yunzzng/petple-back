@@ -1,7 +1,7 @@
 const users = require('../../schemas/user/user.schema');
+const pets = require('../../schemas/pet/pet.schema');
 
 const createUser = async (userData) => {
-  console.log(userData);
   try {
     const newUser = await users.create(userData);
     return newUser;
@@ -10,8 +10,22 @@ const createUser = async (userData) => {
   }
 };
 
-const findByEmail = async (userEmail) => {
-  const user = await users.findOne({ email: userEmail });
+const createPet = async (petData) => {
+  try {
+    const newPet = await pets.create(petData);
+    return newPet;
+  } catch (error) {
+    throw Error('유저펫 생성 실패' + error.message);
+  }
+};
+
+const findByEmail = (userEmail) => {
+  const user = users.findOne({ email: userEmail });
+  return user;
+};
+
+const findById = async (userId) => {
+  const user = await users.findOne({ _id: userId });
   return user;
 };
 
@@ -59,4 +73,6 @@ module.exports = {
   findByEmail,
   createNickname,
   duplication,
+  findById,
+  createPet,
 };

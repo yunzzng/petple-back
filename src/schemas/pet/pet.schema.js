@@ -1,20 +1,21 @@
 const mongoose = require('mongoose');
 
 const petSchema = new mongoose.Schema({
-  petName: {
+  name: {
     type: String,
     required: true,
   },
   age: {
-    type: Number,
+    type: String,
     required: true,
   },
   breed: {
     type: String,
     required: true,
   },
-  gender: {
+  image: {
     type: String,
+    required: false,
   },
 });
 
