@@ -145,7 +145,7 @@ class UserController {
   }
 
   async updateUserInfo(req, res, next) {
-    const { userNickName, userImage } = req.body;
+    const { userNickName, profileImg } = req.body;
     const { token } = req.cookies;
 
     try {
@@ -156,17 +156,13 @@ class UserController {
       }
 
       const decodedToken = await verifyToken(token);
-      console.log('decodedToken', decodedToken);
       const userEmail = decodedToken.email;
-
-      const findUser = await findByEmail(userEmail);
-      console.log('findUser:', findUser);
 
       const updateInfo = await users.findOneAndUpdate(
         { email: userEmail },
         {
           nickName: userNickName,
-          profileImage: userImage,
+          profileImage: profileImg,
         },
         { new: true },
       );
