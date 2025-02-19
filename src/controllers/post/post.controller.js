@@ -4,8 +4,8 @@ const { createError } = require('../../utils/error');
 
 class PostController {
   async getPosts(req, res, next) {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 3;
+    const page = Number(req.query.page) ?? 1;
+    const limit = Number(req.query.limit) ?? 3;
     try {
       const [posts, totalPostsCount] = await PostService.getPosts(page, limit);
       const totalPage = Math.ceil(totalPostsCount / limit);

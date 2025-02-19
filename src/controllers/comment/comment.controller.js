@@ -36,7 +36,7 @@ class CommentController {
     const { id } = req.params;
     const { description } = req.body;
     if (!id) {
-      return next(createError(400, '댓글 정보가 필요합니다.'));
+      throw createError(400, '댓글 정보가 필요합니다.');
     }
     try {
       await CommentService.updateComment(id, description);
