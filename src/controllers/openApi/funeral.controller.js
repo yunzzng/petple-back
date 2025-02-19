@@ -1,6 +1,5 @@
 const axios = require("axios");
 const config = require("../../consts/app");
-const { createError } = require("../../utils/error");
 
 class FuneralController {
   async getFuneralData(req, res, next) {

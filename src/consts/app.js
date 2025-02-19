@@ -28,11 +28,14 @@ const config = {
       seoul: process.env.BASE_URL_SEOUL,
       place: process.env.PLACE_OPEN_API_URL,
       placeDetail: process.env.PLACE_DETAIL_OPEN_API_URL,
+      placeCommon: process.env.PLACE_COMMON_OPEN_API_URL,
+      food: process.env.FOOD_OPEN_API_URL,
     },
     apiKeys: {
       gyeonggi: process.env.OPEN_GYEONGGI_API_KEY,
       seoul: process.env.OPEN_SEOUL_API_KEY,
       place: process.env.PLACE_OPEN_API_KEY,
+      food: process.env.FOOD_OPEN_API_KEY,
     },
   },
 };
