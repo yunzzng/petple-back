@@ -43,7 +43,9 @@ class MedicalController {
         return res.status(200).json({ success: true, medicalData: [] });
       }
 
+      // 중복 제거 (set 객체 생성)
       const seen = new Set();
+
       const formattedData = await Promise.all(
         rawData.map(async (item) => {
           const address = item.RDNWHLADDR || item.SITEWHLADDR || '';
