@@ -110,6 +110,10 @@ class PostController {
       return next(createError(400, '데이터 정보가 부족합니다.'));
     }
     try {
+      const post = await PostService.getPostById(postId);
+      if (!post) {
+        throw createError(404, '게시물을 찾을 수 없습니다.');
+      }
       await PostService.deleteComment(postId, commentId);
       await CommentService.deleteComment(commentId);
       return res

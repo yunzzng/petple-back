@@ -1,6 +1,16 @@
 const Comment = require('../../schemas/comment/comment.schema');
+const { createError } = require('../../utils/error');
 
 class CommentService {
+  async getCommentById(id) {
+    try {
+      const document = await Comment.findById(id).lean();
+      return document;
+    } catch (error) {
+      throw createError(500, `[DB에러] CommentService.getCommentById`);
+    }
+  }
+
   async addComment(creator, post, description, hasParent) {
     try {
       const document = await Comment.create({

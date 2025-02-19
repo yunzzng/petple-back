@@ -34,11 +34,15 @@ class CommentController {
 
   async updateComment(req, res, next) {
     const { id } = req.params;
-    const { description } = req.body;
+    const { description, postId } = req.body;
     if (!id) {
       throw createError(400, '댓글 정보가 필요합니다.');
     }
     try {
+      const isExistedPost = await PostService.getPostById(postId);
+      if (!isExistedPost) {
+        throw createError(404, '게시물 정보가 없습니다.');
+      }
       await CommentService.updateComment(id, description);
       return res
         .status(200)
@@ -70,9 +74,13 @@ class CommentController {
   async deleteReply(req, res, next) {
     const { commentId, replyId } = req.params;
     if (!commentId || !replyId) {
-      next(createError(400, '댓글 정보가 필요합니다.'));
+      throw createError(400, '댓글 정보가 필요합니다.');
     }
     try {
+      const isExistedComment = await CommentService.getCommentById(commentId);
+      if (!isExistedComment) {
+        throw createError(404, '댓글 정보가 없습니다.');
+      }
       await CommentService.deleteReply(commentId, replyId);
       return res
         .status(204)
@@ -86,9 +94,13 @@ class CommentController {
     const { commentId, replyId } = req.params;
     const { description } = req.body;
     if (!commentId || !replyId || !description) {
-      next(createError(400, '댓글 정보가 필요합니다.'));
+      throw createError(400, '댓글 정보가 필요합니다.');
     }
     try {
+      const isExistedComment = await CommentService.getCommentById(commentId);
+      if (!isExistedComment) {
+        throw createError(404, '댓글 정보가 없습니다.');
+      }
       await CommentService.updateReply(commentId, replyId, description);
       return res
         .status(200)
