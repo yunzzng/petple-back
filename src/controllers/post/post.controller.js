@@ -97,7 +97,7 @@ class PostController {
       }
       await PostService.deletePostById(id, post);
       return res
-        .status(200)
+        .status(204)
         .json({ success: true, message: '게시글 삭제 성공' });
     } catch (error) {
       next(createError(500, `게시글 업데이트에 실패하였습니다. ${error}`));
@@ -113,7 +113,7 @@ class PostController {
       await PostService.deleteComment(postId, commentId);
       await CommentService.deleteComment(commentId);
       return res
-        .status(200)
+        .status(204)
         .json({ success: true, message: '댓글 정보를 삭제하였습니다.' });
     } catch (error) {
       next(error);

@@ -26,7 +26,7 @@ class CommentController {
         hasParent,
       );
       await PostService.updatePostCommentsField(postId, comment._id);
-      return res.status(200).json({ success: true, comment });
+      return res.status(201).json({ success: true, comment });
     } catch (error) {
       next(error);
     }
@@ -61,7 +61,7 @@ class CommentController {
         description,
         tag,
       });
-      return res.status(200).json({ success: true, message: '답글 성공' });
+      return res.status(201).json({ success: true, message: '답글 성공' });
     } catch (error) {
       next(error);
     }
@@ -75,7 +75,7 @@ class CommentController {
     try {
       await CommentService.deleteReply(commentId, replyId);
       return res
-        .status(200)
+        .status(204)
         .json({ success: true, message: '답글을 살제 하였습니다.' });
     } catch (error) {
       next(error);
