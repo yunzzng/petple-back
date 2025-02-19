@@ -40,6 +40,9 @@ class PostController {
     }
     try {
       const post = await PostService.getPostById(id);
+      if (!post) {
+        throw createError(404, '잘못된 게시글 정보 요청 입니다.');
+      }
       return res.status(200).json({ success: true, post });
     } catch (error) {
       next(createError(500, `게시글을 가져오는데 실패하였습니다. ${error}`));
