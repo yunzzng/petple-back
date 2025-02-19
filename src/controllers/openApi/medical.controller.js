@@ -43,6 +43,7 @@ class MedicalController {
         return res.status(200).json({ success: true, medicalData: [] });
       }
 
+      const seen = new Set();
       const formattedData = await Promise.all(
         rawData.map(async (item) => {
           const address = item.RDNWHLADDR || item.SITEWHLADDR || '';
@@ -56,7 +57,7 @@ class MedicalController {
                   lng: parseFloat(item.REFINE_WGS84_LOGT || item.X) || null,
                 };
 
-          return {
+          const formattedItem = {
             name: item.BPLCNM || item.BIZPLC_NM || '이름 없음',
             lat: coordinates.lat,
             lng: coordinates.lng,
@@ -65,10 +66,22 @@ class MedicalController {
             roadAddress: item.REFINE_ROADNM_ADDR || item.RDNWHLADDR || '',
             lotAddress: item.REFINE_LOTNO_ADDR || item.SITEWHLADDR || '',
           };
+
+          // 중복 제거 (이름 + 도로명 주소 기준)
+          const uniqueKey = `${formattedItem.name}-${formattedItem.roadAddress}`;
+          if (!seen.has(uniqueKey)) {
+            seen.add(uniqueKey);
+            return formattedItem;
+          }
+
+          return null;
         })
       );
 
-      return res.status(200).json({ success: true, medicalData: formattedData });
+      return res.status(200).json({
+        success: true,
+        medicalData: formattedData.filter((item) => item !== null),
+      });
     } catch (error) {
       next(error);
     }
