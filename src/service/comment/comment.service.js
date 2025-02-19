@@ -9,7 +9,7 @@ class CommentService {
         description,
         hasParent,
       });
-      return document;
+      return document.toObject();
     } catch (error) {
       throw new Error(`[DB에러] CommentService.addComment`, { cause: error });
     }
@@ -52,7 +52,8 @@ class CommentService {
             tag,
           },
         },
-      });
+      }) //
+        .lean();
       return document;
     } catch (error) {
       throw new Error(`[DB에러] CommentService.addReply`, { cause: error });

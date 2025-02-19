@@ -1,17 +1,16 @@
 const users = require('../../schemas/user/user.schema');
 
 const createUser = async (userData) => {
-  console.log(userData);
   try {
     const newUser = await users.create(userData);
-    return newUser;
+    return newUser.toObject();
   } catch (error) {
     throw Error('유저생성 실패' + error.message);
   }
 };
 
 const findByEmail = async (userEmail) => {
-  const user = await users.findOne({ email: userEmail });
+  const user = await users.findOne({ email: userEmail }).lean();
   return user;
 };
 
