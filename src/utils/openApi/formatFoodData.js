@@ -2,17 +2,17 @@ const getValue = (field) => {
   if (!field) return "정보 없음";
   if (typeof field === "string") return field.trim();
   if (typeof field === "object") {
-    return field._cdata?.trim() || field._text?.trim() || "정보 없음";
+    return field._cdata?.trim() ?? field._text?.trim() ?? "정보 없음";
   }
   return "정보 없음";
 };
 
 const formatFoodData = (item) => {
-  const price = getValue(item.mtralPc);
-  const protein = getValue(item.protQy);
-  const fat = getValue(item.fatQy);
-  const fiber = getValue(item.crfbQy);
-  const moisture = getValue(item.mitrQy);
+  const price = getValue(item.mtralPc); // 가격
+  const protein = getValue(item.protQy); // 단백질
+  const fat = getValue(item.fatQy); // 지방
+  const fiber = getValue(item.crfbQy); // 조섬유
+  const moisture = getValue(item.mitrQy); // 수분
   const dryMatter = getValue(item.dryMatter); // 건물
   const tryptophan = getValue(item.trpQy); // 트립토판
   const calcium = getValue(item.caQy); // 칼슘
