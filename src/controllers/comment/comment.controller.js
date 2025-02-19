@@ -12,9 +12,13 @@ class CommentController {
       hasParent === null ||
       hasParent === undefined
     ) {
-      return next(createError(400, '댓글 작성에 필요한 정보가 필요합니다.'));
+      throw createError(400, '댓글 작성에 필요한 정보가 필요합니다.');
     }
     try {
+      const isExistedPost = await PostService.getPostById(postId);
+      if (!isExistedPost) {
+        throw createError(404, '게시글을 찾을 수 없습니다.');
+      }
       const comment = await CommentService.addComment(
         creator,
         postId,
