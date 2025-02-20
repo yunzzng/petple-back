@@ -15,8 +15,8 @@ const formatFoodData = (item) => {
   const moisture = getValue(item.mitrQy); // 수분
   const dryMatter = getValue(item.dryMatter); // 건물
   const tryptophan = getValue(item.trpQy); // 트립토판
-  const calcium = getValue(item.caQy); // 칼슘
-  const phosphorus = getValue(item.pQy); // 인
+  const calcium = getValue(item.clciQy); // 칼슘
+  const phosphorus = getValue(item.phphQy); // 인
   const linoleicAcid = getValue(item.lnlcAcidQy); // 리놀레산
   const linolenicAcid = getValue(item.lnlnAcidQy); // 레놀렌산
   const ash = getValue(item.ashQy); // 회분
