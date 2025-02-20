@@ -5,10 +5,9 @@ const cookieParser = require('cookie-parser');
 const errorHandler = require('./src/middleware/errorHandler');
 const userRoutes = require('./src/routes/user/user.routes');
 const oauthRoutes = require('./src/routes/oauth/oauth.routes');
-const imageRoutes = require('./src/routes/image/image.route');
-const postsRoutes = require('./src/routes/post/post.router');
-const commentRoutes = require('./src/routes/comment/comment.route');
-const { token } = require('./src/middleware/token.middleware');
+const imageRoutes = require('./src/routes/image/image.routes');
+const postsRoutes = require('./src/routes/post/post.routes');
+const commentRoutes = require('./src/routes/comment/comment.routes');
 const publicRoutes = require('./src/routes/openApi/public.routes');
 
 const app = express();

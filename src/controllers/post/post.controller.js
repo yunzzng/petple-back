@@ -4,7 +4,7 @@ const { createError } = require('../../utils/error');
 
 class PostController {
   async getPosts(req, res, next) {
-    const page = Number(req.query.page) || 1;
+    const page = Number(req.query.page) ?? 1;
     const limit = Number(req.query.limit) || 3;
     try {
       const [posts, totalPostsCount] = await PostService.getPosts(page, limit);
@@ -21,6 +21,18 @@ class PostController {
     }
   }
 
+  async getPopularPosts(_req, res, next) {
+    try {
+      const posts = await PostService.getPopularPosts();
+      if (posts === null) {
+        throw createError(404, '게시글 정보가 없습니다.');
+      }
+      return res.status(200).json({ success: true, posts });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getPost(req, res, next) {
     const { id } = req.params;
     if (!id) {
@@ -28,6 +40,9 @@ class PostController {
     }
     try {
       const post = await PostService.getPostById(id);
+      if (!post) {
+        throw createError(404, '잘못된 게시글 정보 요청 입니다.');
+      }
       return res.status(200).json({ success: true, post });
     } catch (error) {
       next(createError(500, `게시글을 가져오는데 실패하였습니다. ${error}`));
@@ -82,7 +97,7 @@ class PostController {
       }
       await PostService.deletePostById(id, post);
       return res
-        .status(200)
+        .status(204)
         .json({ success: true, message: '게시글 삭제 성공' });
     } catch (error) {
       next(createError(500, `게시글 업데이트에 실패하였습니다. ${error}`));
@@ -95,10 +110,14 @@ class PostController {
       return next(createError(400, '데이터 정보가 부족합니다.'));
     }
     try {
+      const post = await PostService.getPostById(postId);
+      if (!post) {
+        throw createError(404, '게시물을 찾을 수 없습니다.');
+      }
       await PostService.deleteComment(postId, commentId);
       await CommentService.deleteComment(commentId);
       return res
-        .status(200)
+        .status(204)
         .json({ success: true, message: '댓글 정보를 삭제하였습니다.' });
     } catch (error) {
       next(error);
