@@ -5,6 +5,8 @@ const {
   duplication,
   findById,
   createPet,
+  userPost,
+  likePost,
 } = require('../../service/user/user.service');
 const crypto = require('crypto');
 const { createToken, verifyToken } = require('../../consts/token');
@@ -265,6 +267,51 @@ class UserController {
     await pets.findByIdAndDelete(petId);
 
     res.status(200).json({ success: true, message: '반려동물 정보 삭제 성공' });
+  }
+
+  async getUserPost(req, res, next) {
+    const token = req.cookies;
+
+    const decodedToken = await verifyToken(token);
+    const userId = decodedToken._id;
+
+    try {
+      const posts = await userPost(userId);
+
+      if (!posts) {
+        throw createError(404, '작성한 게시물이 없습니다.');
+      }
+
+      res.status(200).json({
+        success: true,
+        message: '작성한 게시물 조회 성공',
+        myPosts: posts,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUserLikesPost(req, res, next) {
+    const token = req.cookies;
+
+    const decodedToken = await verifyToken(token);
+    const userId = decodedToken._id;
+
+    try {
+      const posts = await likePost(userId);
+      if (!posts) {
+        throw createError(404, '좋아요한 게시물이 없습니다.');
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: '좋아요 게시물 조회 성공',
+        likePosts: posts,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

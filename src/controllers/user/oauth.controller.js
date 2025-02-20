@@ -1,6 +1,7 @@
 const { default: axios } = require('axios');
 const { createError } = require('../../utils/error');
 const users = require('../../schemas/user/user.schema');
+const config = require('../../consts/app');
 const {
   createNickname,
   createUser,
@@ -51,18 +52,12 @@ class OauthController {
       if (!user) {
         const nickName = await createNickname(name);
 
-        const hashedPassword = crypto
-          .createHash('sha512')
-          .update(email)
-          .digest('base64');
-
         const oauthUser = await createUser({
           name: name,
           email: email,
           nickName: nickName,
           profileImage: picture,
           userType: 'google',
-          password: hashedPassword,
         });
 
         await oauthUser.save();
@@ -81,7 +76,7 @@ class OauthController {
           path: '/', //모든 경로에 쿠키포함
         });
 
-        return res.redirect(`http://localhost:5173/`);
+        return res.redirect(config.app.frontUrl);
       }
 
       // 로그인한 기록이 있는 유저이면 로그인
@@ -99,7 +94,7 @@ class OauthController {
         path: '/', //모든 경로에 쿠키포함
       });
 
-      return res.redirect(`http://localhost:5173/`);
+      return res.redirect(config.app.frontUrl);
     } catch (error) {
       next(error);
     }
