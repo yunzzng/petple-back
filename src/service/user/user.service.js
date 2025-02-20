@@ -4,7 +4,7 @@ const pets = require('../../schemas/pet/pet.schema');
 const createUser = async (userData) => {
   try {
     const newUser = await users.create(userData);
-    return newUser;
+    return newUser.toObject();
   } catch (error) {
     throw Error('유저생성 실패' + error.message);
   }

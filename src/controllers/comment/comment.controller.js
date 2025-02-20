@@ -12,9 +12,13 @@ class CommentController {
       hasParent === null ||
       hasParent === undefined
     ) {
-      return next(createError(400, '댓글 작성에 필요한 정보가 필요합니다.'));
+      throw createError(400, '댓글 작성에 필요한 정보가 필요합니다.');
     }
     try {
+      const isExistedPost = await PostService.getPostById(postId);
+      if (!isExistedPost) {
+        throw createError(404, '게시글을 찾을 수 없습니다.');
+      }
       const comment = await CommentService.addComment(
         creator,
         postId,
@@ -22,7 +26,7 @@ class CommentController {
         hasParent,
       );
       await PostService.updatePostCommentsField(postId, comment._id);
-      return res.status(200).json({ success: true, comment });
+      return res.status(201).json({ success: true, comment });
     } catch (error) {
       next(error);
     }
@@ -30,11 +34,15 @@ class CommentController {
 
   async updateComment(req, res, next) {
     const { id } = req.params;
-    const { description } = req.body;
+    const { description, postId } = req.body;
     if (!id) {
-      return next(createError(400, '댓글 정보가 필요합니다.'));
+      throw createError(400, '댓글 정보가 필요합니다.');
     }
     try {
+      const isExistedPost = await PostService.getPostById(postId);
+      if (!isExistedPost) {
+        throw createError(404, '게시물 정보가 없습니다.');
+      }
       await CommentService.updateComment(id, description);
       return res
         .status(200)
@@ -57,7 +65,7 @@ class CommentController {
         description,
         tag,
       });
-      return res.status(200).json({ success: true, message: '답글 성공' });
+      return res.status(201).json({ success: true, message: '답글 성공' });
     } catch (error) {
       next(error);
     }
@@ -66,12 +74,16 @@ class CommentController {
   async deleteReply(req, res, next) {
     const { commentId, replyId } = req.params;
     if (!commentId || !replyId) {
-      next(createError(400, '댓글 정보가 필요합니다.'));
+      throw createError(400, '댓글 정보가 필요합니다.');
     }
     try {
+      const isExistedComment = await CommentService.getCommentById(commentId);
+      if (!isExistedComment) {
+        throw createError(404, '댓글 정보가 없습니다.');
+      }
       await CommentService.deleteReply(commentId, replyId);
       return res
-        .status(200)
+        .status(204)
         .json({ success: true, message: '답글을 살제 하였습니다.' });
     } catch (error) {
       next(error);
@@ -82,9 +94,13 @@ class CommentController {
     const { commentId, replyId } = req.params;
     const { description } = req.body;
     if (!commentId || !replyId || !description) {
-      next(createError(400, '댓글 정보가 필요합니다.'));
+      throw createError(400, '댓글 정보가 필요합니다.');
     }
     try {
+      const isExistedComment = await CommentService.getCommentById(commentId);
+      if (!isExistedComment) {
+        throw createError(404, '댓글 정보가 없습니다.');
+      }
       await CommentService.updateReply(commentId, replyId, description);
       return res
         .status(200)
