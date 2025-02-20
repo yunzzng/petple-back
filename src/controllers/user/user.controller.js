@@ -269,45 +269,34 @@ class UserController {
     res.status(200).json({ success: true, message: '반려동물 정보 삭제 성공' });
   }
 
-  async getUserPost(req, res, next) {
+  async getUserPosts(req, res, next) {
     const token = req.cookies;
-
-    const decodedToken = await verifyToken(token);
-    const userId = decodedToken._id;
+    const { type } = req.query;
 
     try {
-      const posts = await userPost(userId);
+      const decodedToken = await verifyToken(token);
+      const userId = decodedToken._id;
 
-      if (!posts) {
-        throw createError(404, '작성한 게시물이 없습니다.');
+      let posts;
+
+      if (type === 'myPosts') {
+        const posts = await userPost(userId);
+        if (!posts || posts.length === 0) {
+          throw createError(404, '작성한 게시물이 없습니다.');
+        }
+      } else if (type === 'likePosts') {
+        posts = await likePost(userId);
+        if (!posts || posts.length === 0) {
+          throw createError(404, '좋아요한 게시물이 없습니다.');
+        }
       }
 
       res.status(200).json({
         success: true,
-        message: '작성한 게시물 조회 성공',
-        myPosts: posts,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getUserLikesPost(req, res, next) {
-    const token = req.cookies;
-
-    const decodedToken = await verifyToken(token);
-    const userId = decodedToken._id;
-
-    try {
-      const posts = await likePost(userId);
-      if (!posts) {
-        throw createError(404, '좋아요한 게시물이 없습니다.');
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: '좋아요 게시물 조회 성공',
-        likePosts: posts,
+        message: `${
+          type === 'myPosts' ? '작성한 게시물' : '좋아요한 게시물'
+        } 조회 성공`,
+        posts,
       });
     } catch (error) {
       next(error);
