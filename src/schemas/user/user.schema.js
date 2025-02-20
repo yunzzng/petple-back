@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
       {
         type: ObjectId,
         required: false,
-        ref: 'Pet',
+        ref: 'pets',
       },
     ],
     userType: {
