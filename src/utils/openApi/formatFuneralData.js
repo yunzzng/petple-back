@@ -14,9 +14,8 @@ const formatSeoulFuneralData = async (item) => {
     title: item.title,  // 장례식장 이름
     roadAddress: address,    // 주소
     phone: item.phone,  // 전화번호
-    url: item.url,      // 네이버 지도 URL
-    lat: coordinates.lat, // 위도 (카카오 API 변환)
-    lng: coordinates.lng, // 경도 (카카오 API 변환)
+    lat: coordinates.lat, // 위도
+    lng: coordinates.lng, // 경도
   };
 };
 
