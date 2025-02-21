@@ -5,7 +5,6 @@ const kakaoController = require('../../controllers/openApi/kakao.controller');
 const { getMedicalData } = require('../../controllers/openApi/medical.controller');
 const placeController = require('../../controllers/openApi/place.controller');
 
-
 const publicRoutes = require('express').Router();
 
 // 공공데이터 API 라우트
