@@ -71,19 +71,25 @@ const duplication = async (userNickName) => {
 
 const userPost = async (userId) => {
   try {
-    const posts = await posts.find({ creator: userId });
-    return posts;
+    const userPosts = await posts.find({ creator: userId });
+    if (userPosts) {
+      return userPosts;
+    }
+    return [];
   } catch (error) {
-    throw Error('작성 게시물 조회 목록 없음' + error.message);
+    throw Error(error.message);
   }
 };
 
 const likePost = async (userId) => {
   try {
     const likesPost = await posts.find({ likes: userId });
-    return likesPost;
+    if (likesPost) {
+      return likesPost;
+    }
+    return [];
   } catch (error) {
-    throw Error('좋아요 게시물 조회 목록 없음' + error.message);
+    throw Error(error.message);
   }
 };
 

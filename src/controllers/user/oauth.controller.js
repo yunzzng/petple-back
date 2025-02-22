@@ -47,7 +47,6 @@ class OauthController {
       const { email, name, picture } = userResponse.data;
 
       const user = await findByEmail(email);
-
       // 처음 로그인한 유저이면 새로 생성
       if (!user) {
         const nickName = await createNickname(name);
@@ -62,7 +61,10 @@ class OauthController {
 
         await oauthUser.save();
 
-        const token = createToken({ email: oauthUser.email });
+        const token = createToken({
+          email: oauthUser.email,
+          id: oauthUser._id,
+        });
 
         res.cookie('token', token, {
           httpOnly: true,
@@ -80,7 +82,10 @@ class OauthController {
       }
 
       // 로그인한 기록이 있는 유저이면 로그인
-      const token = createToken({ email: user.email });
+      const token = createToken({
+        email: user.email,
+        userId: user._id.toString(),
+      });
 
       res.cookie('token', token, {
         httpOnly: true,

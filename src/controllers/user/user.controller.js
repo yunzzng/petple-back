@@ -53,7 +53,6 @@ class UserController {
       if (!user) {
         throw createError(404, '가입된 회원 정보가 없습니다.');
       }
-      console.log(user);
 
       const token = createToken({ email: user.email, userId: user._id });
 
@@ -180,9 +179,6 @@ class UserController {
   async createPetInfo(req, res, next) {
     const { userId, formData, image } = req.body;
 
-    console.log('반려동물 생성 폼데이터:', formData);
-    console.log('이미지:', image);
-
     try {
       const user = await findById(userId);
 
@@ -215,7 +211,7 @@ class UserController {
 
   async updatePetInfo(req, res, next) {
     const { userPet, petImage, petId } = req.body;
-    console.log('petId:', petId);
+
     try {
       // 기존 반려동물 프로필 수정
       const updatePet = await pets.findOneAndUpdate(
@@ -229,8 +225,6 @@ class UserController {
         },
         { new: true },
       );
-
-      console.log('updtaePet', updatePet);
 
       if (!updatePet) {
         throw createError(404, '반려동물을 찾을 수 없습니다.');
@@ -270,33 +264,23 @@ class UserController {
   }
 
   async getUserPosts(req, res, next) {
-    const token = req.cookies;
-    const { type } = req.query;
+    const { token } = req.cookies;
+    const decodedToken = await verifyToken(token);
+    const userId = decodedToken.userId;
+
+    const user = await findById(userId);
+    if (!user) {
+      throw createError(404, '유저 정보가 없습니다.');
+    }
 
     try {
-      const decodedToken = await verifyToken(token);
-      const userId = decodedToken._id;
-
-      let posts;
-
-      if (type === 'myPosts') {
-        const posts = await userPost(userId);
-        if (!posts || posts.length === 0) {
-          throw createError(404, '작성한 게시물이 없습니다.');
-        }
-      } else if (type === 'likePosts') {
-        posts = await likePost(userId);
-        if (!posts || posts.length === 0) {
-          throw createError(404, '좋아요한 게시물이 없습니다.');
-        }
-      }
-
-      res.status(200).json({
+      const myPost = await userPost(userId);
+      const myLikePost = await likePost(userId);
+      return res.status(200).json({
         success: true,
-        message: `${
-          type === 'myPosts' ? '작성한 게시물' : '좋아요한 게시물'
-        } 조회 성공`,
-        posts,
+        message: '게시물 조회 성공',
+        posts: myPost,
+        likePosts: myLikePost,
       });
     } catch (error) {
       next(error);
