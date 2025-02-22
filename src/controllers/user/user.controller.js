@@ -105,7 +105,9 @@ class UserController {
 
       const email = decodedToken.email;
 
-      const user = await findByEmail(email).populate('userPet');
+      const user = await findByEmail(email)
+        .populate('userPet')
+        .populate('address');
 
       if (!user) {
         throw createError(404, '유저 정보가 없습니다!');
@@ -120,6 +122,7 @@ class UserController {
           nickName: user.nickName,
           image: user.profileImage,
           pet: user.userPet,
+          address: user.address,
         },
       });
     } catch (error) {
@@ -145,7 +148,7 @@ class UserController {
   }
 
   async updateUserInfo(req, res, next) {
-    const { userNickName, profileImg, userEmail } = req.body;
+    const { userNickName, profileImg, userEmail, selectedAddress } = req.body;
     const { token } = req.cookies;
 
     try {
@@ -158,6 +161,11 @@ class UserController {
         {
           nickName: userNickName,
           profileImage: profileImg,
+          address: {
+            jibunAddress: selectedAddress.jibunAddress,
+            lat: selectedAddress.x,
+            lng: selectedAddress.y,
+          },
         },
         { new: true },
       );
