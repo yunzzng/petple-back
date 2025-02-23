@@ -15,7 +15,7 @@ variables:
 build_and_publish:
   stage: build_and_publish
   script:
-    - docker build -t $TAG_COMMIT -t $TAG_LATEST -t .
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
     - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PAT
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
