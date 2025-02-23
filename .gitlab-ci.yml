@@ -23,6 +23,7 @@ build_and_publish:
 deploy:
   stage: deploy
   script:
+    - echo $ID_RSA
     - chmod og= $ID_RSA
     - apk update && apk add openssh-client
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PAT"
