@@ -1,4 +1,4 @@
 const app = require('./app');
-const PORT = 8080;
+const PORT = 3000;
 
-app.listen(8080, () => console.log(`Express Running on ${PORT}`));
+app.listen(3000, () => console.log(`Express Running on ${PORT}`));
