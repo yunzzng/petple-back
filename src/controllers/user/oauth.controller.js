@@ -20,7 +20,7 @@ class OauthController {
     const { code } = req.query;
 
     if (!code) {
-      throw createError(400, '코드 없음');
+      throw createError(400, '인증코드 없음');
     }
 
     try {
@@ -100,6 +100,53 @@ class OauthController {
       });
 
       return res.redirect(config.app.frontUrl);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async kakaoOauth(req, res) {
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.KAKAO_OAUTH_REST_API_KEY}&redirect_uri=${process.env.KAKAO_OAUTH_REDIRECT_URI}`;
+    res.redirect(kakaoAuthUrl);
+  }
+
+  async kakaoOauthCallback(req, res, next) {
+    const { code } = req.query;
+
+    if (!code) {
+      throw createError(400, '인증코드 없음');
+    }
+
+    try {
+      const tokenResponse = await axios.post(
+        'https://kauth.kakao.com/oauth/token',
+        {
+          grant_type: 'authorization_code',
+          client_id: process.env.KAKAO_OAUTH_REST_API_KEY,
+          client_secret: process.env.KAKAO_CLIENT_SECRET,
+          redirect_uri: process.env.KAKAO_OAUTH_REDIRECT_URI,
+          code: code,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+          },
+        },
+      );
+
+      const { access_token } = tokenResponse.data;
+
+      const userResponse = await axios.get(
+        'https://kapi.kakao.com/v2/user/me',
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        },
+      );
+
+      const { nickname, profile_image } = userResponse.data.properties;
+      const { email } = userResponse.data.kakao_account;
+
+      console.log(nickname, profile_image, email);
     } catch (error) {
       next(error);
     }
