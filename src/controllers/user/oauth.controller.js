@@ -15,7 +15,7 @@ class OauthController {
     res.redirect(googleAuthURL);
   }
 
-  async googleOauthCallback(req, res) {
+  async googleOauthCallback(req, res, next) {
     const { code } = req.query;
 
     if (!code) {
@@ -29,7 +29,7 @@ class OauthController {
           code: code,
           client_id: process.env.GOOGLE_CLIENT_ID,
           client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          redirect_uri: config.oauth.google_redirect,
+          redirect_uri: process.env.GOOGLE_CLIENT_CALLBACK_URL,
           grant_type: 'authorization_code',
         },
       );
@@ -144,6 +144,8 @@ class OauthController {
 
       const { nickname, profile_image } = userResponse.data.properties;
       const { email } = userResponse.data.kakao_account;
+
+      return res.redirect(config.app.frontUrl);
     } catch (error) {
       next(error);
     }

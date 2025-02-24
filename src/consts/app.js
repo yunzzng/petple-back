@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const config = {
   app: {
-    port: 8080,
+    port: 3000,
     frontUrl: process.env.FRONT_URL,
   },
   jwt: {
