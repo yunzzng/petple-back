@@ -1,3 +1,5 @@
+const chatService = require('../service/chat/chat.service');
+
 const ChatNamespace = (io) => {
   const chatNamespace = io.of('/chat');
 
@@ -6,8 +8,18 @@ const ChatNamespace = (io) => {
       socket.join(roomId);
     });
 
-    socket.on('send_message', ({ roomId, text, from, to }) => {
-      chatNamespace.to(roomId).emit('receive_message', { text, from, to });
+    socket.on('send_message', async ({ roomId, text, from, to }) => {
+      try {
+        await chatService.addMessageToChat({
+          roomId,
+          text,
+          from: from.id,
+          to: to.id,
+        });
+        chatNamespace.to(roomId).emit('receive_message', { text, from, to });
+      } catch (error) {
+        chatNamespace.to(roomId).emit('fail_add_message', { text, from, to });
+      }
     });
   });
 };
