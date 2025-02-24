@@ -7,12 +7,11 @@ const {
   createUser,
   findByEmail,
 } = require('../../service/user/user.service');
-const crypto = require('crypto');
 const { createToken } = require('../../consts/token');
 
 class OauthController {
   async googleOauth(req, res) {
-    const googleAuthURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_CLIENT_CALLBACK_URL}&response_type=code&scope=email profile`;
+    const googleAuthURL = config.oauth.google;
     res.redirect(googleAuthURL);
   }
 
@@ -20,7 +19,7 @@ class OauthController {
     const { code } = req.query;
 
     if (!code) {
-      throw createError(400, '코드 없음');
+      throw createError(400, '인증코드 없음');
     }
 
     try {
@@ -30,7 +29,7 @@ class OauthController {
           code: code,
           client_id: process.env.GOOGLE_CLIENT_ID,
           client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          redirect_uri: 'http://localhost:8080/api/oauth/google/callback',
+          redirect_uri: config.oauth.google_redirect,
           grant_type: 'authorization_code',
         },
       );
@@ -100,6 +99,51 @@ class OauthController {
       });
 
       return res.redirect(config.app.frontUrl);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async kakaoOauth(req, res) {
+    const kakaoAuthUrl = config.oauth.kakao;
+    res.redirect(kakaoAuthUrl);
+  }
+
+  async kakaoOauthCallback(req, res, next) {
+    const { code } = req.query;
+
+    if (!code) {
+      throw createError(400, '인증코드 없음');
+    }
+
+    try {
+      const tokenResponse = await axios.post(
+        'https://kauth.kakao.com/oauth/token',
+        {
+          grant_type: 'authorization_code',
+          client_id: process.env.KAKAO_OAUTH_REST_API_KEY,
+          client_secret: process.env.KAKAO_CLIENT_SECRET,
+          redirect_uri: process.env.KAKAO_OAUTH_REDIRECT_URI,
+          code: code,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+          },
+        },
+      );
+
+      const { access_token } = tokenResponse.data;
+
+      const userResponse = await axios.get(
+        'https://kapi.kakao.com/v2/user/me',
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        },
+      );
+
+      const { nickname, profile_image } = userResponse.data.properties;
+      const { email } = userResponse.data.kakao_account;
     } catch (error) {
       next(error);
     }
