@@ -116,6 +116,15 @@ const likePost = async (userId) => {
   }
 };
 
+const findUserByNickname = async (nickName) => {
+  try {
+    const document = await users.findOne({ nickName }).lean();
+    return document;
+  } catch (error) {
+    throw createError(500, '[DB에러 UserSerice.findUserByNickname]');
+  }
+};
+
 module.exports = {
   createUser,
   findByEmail,
@@ -126,4 +135,5 @@ module.exports = {
   findUsersByLocation,
   userPost,
   likePost,
+  findUserByNickname,
 };
