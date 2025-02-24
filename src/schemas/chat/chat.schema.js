@@ -16,20 +16,21 @@ const messageSchema = new mongoose.Schema({
   },
 });
 
-const chatSchema = new mongoose.Schema({
-  paticipants: {
-    type: [ObjectId],
-    required: true,
+const chatSchema = new mongoose.Schema(
+  {
+    roomId: {
+      type: String,
+      requried: true,
+    },
+    messages: {
+      type: [messageSchema],
+      default: [],
+    },
   },
-  roomId: {
-    type: String,
-    requried: true,
+  {
+    timestamps: true,
   },
-  messages: {
-    type: [messageSchema],
-    default: [],
-  },
-});
+);
 
 const Chat = mongoose.model('chats', chatSchema);
 module.exports = Chat;
