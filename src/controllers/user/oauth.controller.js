@@ -6,6 +6,7 @@ const {
   createNickname,
   createUser,
   findByEmail,
+  createEmail,
 } = require('../../service/user/user.service');
 const { createToken } = require('../../consts/token');
 
@@ -55,14 +56,13 @@ class OauthController {
           email: email,
           nickName: nickName,
           profileImage: picture,
-          userType: 'google',
         });
 
         await oauthUser.save();
 
         const token = createToken({
           email: oauthUser.email,
-          id: oauthUser._id,
+          id: oauthUser._id.toString(),
         });
 
         res.cookie('token', token, {
@@ -143,7 +143,63 @@ class OauthController {
       );
 
       const { nickname, profile_image } = userResponse.data.properties;
-      const { email } = userResponse.data.kakao_account;
+      // const { email } = userResponse.data.kakao_account;
+      const email = await createEmail();
+      console.log('random email:', email);
+
+      console.log(userResponse.data.properties);
+
+      const user = await findByEmail(email);
+
+      if (!user) {
+        const newNickName = await createNickname(nickname);
+
+        const oauthUser = await createUser({
+          name: nickname,
+          email: email,
+          nickName: newNickName,
+          profileImage: profile_image,
+        });
+
+        console.log('oauthUser', oauthUser);
+
+        const token = createToken({
+          email: oauthUser.email,
+          id: oauthUser._id.toString(),
+        });
+
+        res.cookie('token', token, {
+          httpOnly: true,
+          maxAge: 60 * 60 * 1000,
+          path: '/',
+        });
+
+        res.cookie('loginStatus', 'true', {
+          httpOnly: false,
+          maxAge: 60 * 60 * 1000,
+          path: '/',
+        });
+
+        return res.redirect(config.app.frontUrl);
+      }
+
+      // 로그인한 기록이 있는 유저이면 로그인
+      const token = createToken({
+        email: user.email,
+        userId: user._id.toString(),
+      });
+
+      res.cookie('token', token, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 1000,
+        path: '/',
+      });
+
+      res.cookie('loginStatus', 'true', {
+        httpOnly: false,
+        maxAge: 60 * 60 * 1000,
+        path: '/', //모든 경로에 쿠키포함
+      });
 
       return res.redirect(config.app.frontUrl);
     } catch (error) {
