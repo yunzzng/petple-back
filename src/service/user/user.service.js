@@ -70,6 +70,19 @@ const duplication = async (userNickName) => {
   return true;
 };
 
+const createEmail = async () => {
+  const randomString = Math.random().toString(36).slice(2);
+
+  const randomEmail = `kakao_${randomString}@elice.com`;
+
+  const existingEmail = await users.findOne({ email: randomEmail });
+  if (!existingEmail) {
+    return randomEmail;
+  }
+
+  return await createEmail();
+};
+
 const findUsersByLocation = async (lng, lat) => {
   try {
     const documents = await users
@@ -126,4 +139,5 @@ module.exports = {
   findUsersByLocation,
   userPost,
   likePost,
+  createEmail,
 };

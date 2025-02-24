@@ -277,6 +277,7 @@ class UserController {
   async getUserPosts(req, res, next) {
     const { token } = req.cookies;
     const decodedToken = await verifyToken(token);
+    console.log('decodedToken', decodedToken);
     const userId = decodedToken.userId;
 
     const user = await findById(userId);
