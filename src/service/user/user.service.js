@@ -1,6 +1,23 @@
 const users = require('../../schemas/user/user.schema');
 const pets = require('../../schemas/pet/pet.schema');
 const { createError } = require('../../utils/error');
+const posts = require('../../schemas/post/post.schema');
+
+const emotion = [
+  '행복한',
+  '즐거운',
+  '기쁜',
+  '신나는',
+  '고마운',
+  '상냥한',
+  '포근한',
+  '친숙한',
+  '쾌활한',
+  '뿌듯한',
+  '귀여운',
+  '멋진',
+  '설레는',
+];
 
 const createUser = async (userData) => {
   try {
@@ -31,22 +48,6 @@ const findById = async (userId) => {
 };
 
 const createNickname = async (userName) => {
-  const emotion = [
-    '행복한',
-    '즐거운',
-    '기쁜',
-    '신나는',
-    '고마운',
-    '상냥한',
-    '포근한',
-    '친숙한',
-    '쾌활한',
-    '뿌듯한',
-    '귀여운',
-    '멋진',
-    '설레는',
-  ];
-
   const randomEmotion = emotion[Math.floor(Math.random() * emotion.length)];
   const randomNum = Math.floor(Math.random() * 9000 + 1);
 
@@ -87,8 +88,31 @@ const findUsersByLocation = async (lng, lat) => {
       .lean();
     return documents;
   } catch (error) {
-    console.log(error);
     throw createError(500, '[DB에러 UserSerice.findByUsersByLocation]');
+  }
+};
+
+const userPost = async (userId) => {
+  try {
+    const userPosts = await posts.find({ creator: userId });
+    if (userPosts) {
+      return userPosts;
+    }
+    return [];
+  } catch (error) {
+    throw Error(error.message);
+  }
+};
+
+const likePost = async (userId) => {
+  try {
+    const likesPost = await posts.find({ likes: userId });
+    if (likesPost) {
+      return likesPost;
+    }
+    return [];
+  } catch (error) {
+    throw Error(error.message);
   }
 };
 
@@ -100,4 +124,6 @@ module.exports = {
   findById,
   createPet,
   findUsersByLocation,
+  userPost,
+  likePost,
 };

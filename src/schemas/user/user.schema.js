@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema(
       enum: ['local', 'google'],
       default: 'local',
     },
+    address: {
+      jibunAddress: { type: String },
+      lat: { type: String },
+      lng: { type: String },
+    },
   },
   {
     timestamps: true,

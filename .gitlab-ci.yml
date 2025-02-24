@@ -9,13 +9,13 @@ stages:
   - deploy
 
 variables:
-  TAG_LATEST: petple/cicd:latest
-  TAG_COMMIT: petple/cicd:$CI_COMMIT_SHORT_SHA
+  TAG_LATEST: ahyeon02/petple:latest
+  TAG_COMMIT: ahyeon02/petple:$CI_COMMIT_SHORT_SHA
 
 build_and_publish:
   stage: build_and_publish
   script:
-    - docker build -t $TAG_COMMIT -t $TAG_LATEST -t .
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
     - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PAT
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
@@ -23,6 +23,7 @@ build_and_publish:
 deploy:
   stage: deploy
   script:
+    - echo $ID_RSA
     - chmod og= $ID_RSA
     - apk update && apk add openssh-client
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PAT"

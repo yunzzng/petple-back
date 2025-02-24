@@ -5,6 +5,8 @@ const {
   duplication,
   findById,
   createPet,
+  userPost,
+  likePost,
 } = require('../../service/user/user.service');
 const crypto = require('crypto');
 const { createToken, verifyToken } = require('../../consts/token');
@@ -51,7 +53,6 @@ class UserController {
       if (!user) {
         throw createError(404, '가입된 회원 정보가 없습니다.');
       }
-      console.log(user);
 
       const token = createToken({ email: user.email, userId: user._id });
 
@@ -104,7 +105,9 @@ class UserController {
 
       const email = decodedToken.email;
 
-      const user = await findByEmail(email).populate('userPet');
+      const user = await findByEmail(email)
+        .populate('userPet')
+        .populate('address');
 
       if (!user) {
         throw createError(404, '유저 정보가 없습니다!');
@@ -119,6 +122,7 @@ class UserController {
           nickName: user.nickName,
           image: user.profileImage,
           pet: user.userPet,
+          address: user.address,
         },
       });
     } catch (error) {
@@ -144,7 +148,7 @@ class UserController {
   }
 
   async updateUserInfo(req, res, next) {
-    const { userNickName, profileImg, userEmail } = req.body;
+    const { userNickName, profileImg, userEmail, selectedAddress } = req.body;
     const { token } = req.cookies;
 
     try {
@@ -157,6 +161,11 @@ class UserController {
         {
           nickName: userNickName,
           profileImage: profileImg,
+          address: {
+            jibunAddress: selectedAddress.jibunAddress,
+            lat: selectedAddress.x,
+            lng: selectedAddress.y,
+          },
         },
         { new: true },
       );
@@ -177,9 +186,6 @@ class UserController {
 
   async createPetInfo(req, res, next) {
     const { userId, formData, image } = req.body;
-
-    console.log('반려동물 생성 폼데이터:', formData);
-    console.log('이미지:', image);
 
     try {
       const user = await findById(userId);
@@ -213,7 +219,7 @@ class UserController {
 
   async updatePetInfo(req, res, next) {
     const { userPet, petImage, petId } = req.body;
-    console.log('petId:', petId);
+
     try {
       // 기존 반려동물 프로필 수정
       const updatePet = await pets.findOneAndUpdate(
@@ -227,8 +233,6 @@ class UserController {
         },
         { new: true },
       );
-
-      console.log('updtaePet', updatePet);
 
       if (!updatePet) {
         throw createError(404, '반려동물을 찾을 수 없습니다.');
@@ -265,6 +269,30 @@ class UserController {
     await pets.findByIdAndDelete(petId);
 
     res.status(200).json({ success: true, message: '반려동물 정보 삭제 성공' });
+  }
+
+  async getUserPosts(req, res, next) {
+    const { token } = req.cookies;
+    const decodedToken = await verifyToken(token);
+    const userId = decodedToken.userId;
+
+    const user = await findById(userId);
+    if (!user) {
+      throw createError(404, '유저 정보가 없습니다.');
+    }
+
+    try {
+      const myPost = await userPost(userId);
+      const myLikePost = await likePost(userId);
+      return res.status(200).json({
+        success: true,
+        message: '게시물 조회 성공',
+        posts: myPost,
+        likePosts: myLikePost,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }
 
