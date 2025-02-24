@@ -152,6 +152,8 @@ class UserController {
     const { userNickName, profileImg, userEmail, selectedAddress } = req.body;
     const { token } = req.cookies;
 
+    console.log('selectedAddress', selectedAddress);
+
     try {
       if (!token) {
         throw createError(400, '토큰 인증 실패');

@@ -34,12 +34,6 @@ const userSchema = new mongoose.Schema(
         ref: 'pets',
       },
     ],
-    userType: {
-      type: String,
-      required: true,
-      enum: ['local', 'google'],
-      default: 'local',
-    },
     address: {
       jibunAddress: { type: String, default: '' },
       location: {
