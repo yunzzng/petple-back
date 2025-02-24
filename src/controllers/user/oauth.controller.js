@@ -58,7 +58,7 @@ class OauthController {
           userType: 'google',
         });
 
-        await oauthUser.save();
+        // await oauthUser.save();
 
         const token = createToken({
           email: oauthUser.email,

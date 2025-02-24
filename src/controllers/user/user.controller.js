@@ -7,6 +7,7 @@ const {
   createPet,
   userPost,
   likePost,
+  findUsersByLocation,
 } = require('../../service/user/user.service');
 const crypto = require('crypto');
 const { createToken, verifyToken } = require('../../consts/token');
@@ -163,8 +164,10 @@ class UserController {
           profileImage: profileImg,
           address: {
             jibunAddress: selectedAddress.jibunAddress,
-            lat: selectedAddress.x,
-            lng: selectedAddress.y,
+            location: {
+              type: selectedAddress.location.type,
+              coordinates: selectedAddress.location.coordinates,
+            },
           },
         },
         { new: true },
@@ -290,6 +293,16 @@ class UserController {
         posts: myPost,
         likePosts: myLikePost,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUsersByLocation(req, res, next) {
+    const { lat, lng } = req.body;
+    try {
+      const users = await findUsersByLocation(lng, lat);
+      return res.status(200).json({ success: true, users });
     } catch (error) {
       next(error);
     }

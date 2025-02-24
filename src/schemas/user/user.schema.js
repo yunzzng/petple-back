@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const {
+  getCoordinates,
+} = require('../../controllers/openApi/kakao.controller');
 const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = new mongoose.Schema(
@@ -18,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     profileImage: {
       type: String,
@@ -38,9 +41,19 @@ const userSchema = new mongoose.Schema(
       default: 'local',
     },
     address: {
-      jibunAddress: { type: String },
-      lat: { type: String },
-      lng: { type: String },
+      jibunAddress: { type: String, default: '' },
+      location: {
+        type: {
+          type: String,
+          enum: ['Point'],
+          default: 'Point',
+          required: true,
+        },
+        coordinates: {
+          type: [Number],
+          default: [0, 0],
+        },
+      },
     },
   },
   {
@@ -48,4 +61,5 @@ const userSchema = new mongoose.Schema(
   },
 );
 
+userSchema.index({ location: '2dsphere' });
 module.exports = mongoose.model('users', userSchema);
