@@ -5,5 +5,7 @@ oauthRoutes.get('/google', OauthController.googleOauth);
 oauthRoutes.get('/google/callback', OauthController.googleOauthCallback);
 oauthRoutes.get('/kakao', OauthController.kakaoOauth);
 oauthRoutes.get('/kakao/callback', OauthController.kakaoOauthCallback);
+oauthRoutes.get('/naver', OauthController.naverOauth);
+oauthRoutes.get('/naver/callback', OauthController.naverOauthCallback);
 
 module.exports = oauthRoutes;

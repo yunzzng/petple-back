@@ -165,8 +165,10 @@ class UserController {
           profileImage: profileImg,
           address: {
             jibunAddress: selectedAddress.jibunAddress,
-            lat: selectedAddress.x,
-            lng: selectedAddress.y,
+            location: {
+              type: selectedAddress.location.type,
+              coordinates: selectedAddress.location.coordinates,
+            },
           },
         },
         { new: true },
@@ -276,6 +278,7 @@ class UserController {
   async getUserPosts(req, res, next) {
     const { token } = req.cookies;
     const decodedToken = await verifyToken(token);
+
     const userId = decodedToken.userId;
 
     const user = await findById(userId);
