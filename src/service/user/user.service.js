@@ -1,5 +1,6 @@
 const users = require('../../schemas/user/user.schema');
 const pets = require('../../schemas/pet/pet.schema');
+const { createError } = require('../../utils/error');
 
 const createUser = async (userData) => {
   try {
@@ -68,6 +69,29 @@ const duplication = async (userNickName) => {
   return true;
 };
 
+const findUsersByLocation = async (lng, lat) => {
+  try {
+    const documents = await users
+      .find({
+        'address.location': {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [lng, lat],
+            },
+            $maxDistance: 3000,
+          },
+        },
+      })
+      .populate('userPet')
+      .lean();
+    return documents;
+  } catch (error) {
+    console.log(error);
+    throw createError(500, '[DB에러 UserSerice.findByUsersByLocation]');
+  }
+};
+
 module.exports = {
   createUser,
   findByEmail,
@@ -75,4 +99,5 @@ module.exports = {
   duplication,
   findById,
   createPet,
+  findUsersByLocation,
 };

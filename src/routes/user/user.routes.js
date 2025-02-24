@@ -10,5 +10,6 @@ userRoutes.post('/info/update', UserController.updateUserInfo); // /api/user/inf
 userRoutes.post('/pet/create', UserController.createPetInfo); // /api/user/pet/create
 userRoutes.post('/pet/update', UserController.updatePetInfo); // /api/user/pet/update
 userRoutes.post('/pet/delete', UserController.deletePetInfo); // /api/user/pet/delete
+userRoutes.get('/near', UserController.getUsersByLocation);
 
 module.exports = userRoutes;
