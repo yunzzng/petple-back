@@ -22,7 +22,7 @@ const config = {
     restApiUrl: process.env.KAKAO_OPEN_REST_API_URL,
     restApiKey: process.env.KAKAO_OPEN_REST_API_KEY,
   },
-  externalData: { 
+  externalData: {
     baseUrls: {
       gyeonggi: process.env.BASE_URL_GYEONGGI,
       seoul: process.env.BASE_URL_SEOUL,
@@ -37,6 +37,11 @@ const config = {
       place: process.env.PLACE_OPEN_API_KEY,
       food: process.env.FOOD_OPEN_API_KEY,
     },
+  },
+  oauth: {
+    kakao: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.KAKAO_OAUTH_REST_API_KEY}&redirect_uri=${process.env.KAKAO_OAUTH_REDIRECT_URI}`,
+    google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_CLIENT_CALLBACK_URL}&response_type=code&scope=email profile`,
+    google_redirect: 'http://localhost:8080/api/oauth/google/callback',
   },
 };
 

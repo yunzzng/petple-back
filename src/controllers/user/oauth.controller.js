@@ -7,12 +7,11 @@ const {
   createUser,
   findByEmail,
 } = require('../../service/user/user.service');
-const crypto = require('crypto');
 const { createToken } = require('../../consts/token');
 
 class OauthController {
   async googleOauth(req, res) {
-    const googleAuthURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_CLIENT_CALLBACK_URL}&response_type=code&scope=email profile`;
+    const googleAuthURL = config.oauth.google;
     res.redirect(googleAuthURL);
   }
 
@@ -30,7 +29,7 @@ class OauthController {
           code: code,
           client_id: process.env.GOOGLE_CLIENT_ID,
           client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          redirect_uri: 'http://localhost:8080/api/oauth/google/callback',
+          redirect_uri: config.oauth.google_redirect,
           grant_type: 'authorization_code',
         },
       );
@@ -106,7 +105,7 @@ class OauthController {
   }
 
   async kakaoOauth(req, res) {
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.KAKAO_OAUTH_REST_API_KEY}&redirect_uri=${process.env.KAKAO_OAUTH_REDIRECT_URI}`;
+    const kakaoAuthUrl = config.oauth.kakao;
     res.redirect(kakaoAuthUrl);
   }
 
@@ -145,8 +144,6 @@ class OauthController {
 
       const { nickname, profile_image } = userResponse.data.properties;
       const { email } = userResponse.data.kakao_account;
-
-      console.log(nickname, profile_image, email);
     } catch (error) {
       next(error);
     }
