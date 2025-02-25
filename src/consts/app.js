@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const state = encodeURIComponent(`myapp-${Date.now()}`);
+
 const config = {
   app: {
     port: 3000,
@@ -41,7 +43,7 @@ const config = {
   oauth: {
     kakao: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.KAKAO_OAUTH_REST_API_KEY}&redirect_uri=${process.env.KAKAO_OAUTH_REDIRECT_URI}`,
     google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_CLIENT_CALLBACK_URL}&response_type=code&scope=email profile`,
-    google_redirect: 'http://localhost:3000/api/oauth/google/callback',
+    naver: `https://nid.naver.com/oauth2.0/authorize?client_id=${process.env.NAVER_OAUTH_CLIENT_ID}&response_type=code&redirect_uri=${process.env.NAVER_OAUTH_REDIRECT_URI}&state=${state}`,
   },
 };
 

@@ -9,8 +9,8 @@ userRoutes.get('/info', UserController.getUserInfo); // /api/user/info
 userRoutes.post('/nickname/check', UserController.nickNameConfirm); // /api/user/nickname/check
 userRoutes.post('/info/update', UserController.updateUserInfo); // /api/user/info/update
 userRoutes.post('/pet/create', UserController.createPetInfo); // /api/user/pet/create
-userRoutes.post('/pet/update', UserController.updatePetInfo); // /api/user/pet/update
-userRoutes.post('/pet/delete', UserController.deletePetInfo); // /api/user/pet/delete
+userRoutes.post('/pet/:petId', UserController.updatePetInfo); // /api/user/pet/update
+userRoutes.delete('/pet/:petId', UserController.deletePetInfo); // /api/user/pet/delete
 userRoutes.get('/posts/get', UserController.getUserPosts); // /api/user/posts/get
 userRoutes.get('/near', UserController.getUsersByLocation);
 

@@ -88,7 +88,7 @@ class UserController {
     try {
       res.clearCookie('token');
       res.clearCookie('loginStatus');
-      res.status(200).json({ message: '로그아웃 완료' });
+      res.status(201).json({ message: '로그아웃 완료' });
     } catch (error) {
       next(error);
     }
@@ -164,8 +164,10 @@ class UserController {
           profileImage: profileImg,
           address: {
             jibunAddress: selectedAddress.jibunAddress,
-            lat: selectedAddress.x,
-            lng: selectedAddress.y,
+            location: {
+              type: selectedAddress.location.type,
+              coordinates: selectedAddress.location.coordinates,
+            },
           },
         },
         { new: true },
@@ -175,7 +177,7 @@ class UserController {
         throw createError(404, '유저 정보가 없습니다.');
       }
 
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         message: '유저 정보 업데이트 성공',
         user: updateInfo,
@@ -202,7 +204,7 @@ class UserController {
       user.userPet.push(newPet._id);
       await user.save();
 
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         message: '반려동물이 추가되었습니다.',
         pet: {
@@ -239,7 +241,7 @@ class UserController {
         throw createError(404, '반려동물을 찾을 수 없습니다.');
       }
 
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         message: '반려동물 정보가 업데이트되었습니다.',
         pet: {
@@ -269,12 +271,13 @@ class UserController {
 
     await pets.findByIdAndDelete(petId);
 
-    res.status(200).json({ success: true, message: '반려동물 정보 삭제 성공' });
+    res.status(201).json({ success: true, message: '반려동물 정보 삭제 성공' });
   }
 
   async getUserPosts(req, res, next) {
     const { token } = req.cookies;
     const decodedToken = await verifyToken(token);
+
     const userId = decodedToken.userId;
 
     const user = await findById(userId);
@@ -283,8 +286,11 @@ class UserController {
     }
 
     try {
-      const myPost = await userPost(userId);
-      const myLikePost = await likePost(userId);
+      const [myPost, myLikePost] = await Promise.all([
+        userPost(userId),
+        likePost(userId),
+      ]);
+
       return res.status(200).json({
         success: true,
         message: '게시물 조회 성공',
