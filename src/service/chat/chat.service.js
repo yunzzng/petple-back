@@ -15,6 +15,20 @@ class ChatService {
       throw createError(500, `[DB에러] ChatService.addMessageToChat`);
     }
   }
+
+  async findChatByRoomId(roomId) {
+    try {
+      const document = await Chat.findOne({ roomId }) //
+        .populate({
+          path: 'messages.from',
+        })
+        .populate({ path: 'messages.to' })
+        .lean();
+      return document;
+    } catch (error) {
+      throw createError(500, `[DB에러] ChatService.findChatByRoomId`);
+    }
+  }
 }
 
 module.exports = new ChatService();
