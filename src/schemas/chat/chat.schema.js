@@ -9,10 +9,12 @@ const messageSchema = new mongoose.Schema({
   from: {
     type: ObjectId,
     required: true,
+    ref: 'users',
   },
   to: {
     type: ObjectId,
     required: true,
+    ref: 'users',
   },
 });
 
