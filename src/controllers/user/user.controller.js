@@ -88,7 +88,7 @@ class UserController {
     try {
       res.clearCookie('token');
       res.clearCookie('loginStatus');
-      res.status(201).json({ message: '로그아웃 완료' });
+      res.status(201).json({ success: true, message: '로그아웃 완료' });
     } catch (error) {
       next(error);
     }
@@ -202,7 +202,6 @@ class UserController {
       });
 
       user.userPet.push(newPet._id);
-      await user.save();
 
       res.status(201).json({
         success: true,
@@ -267,7 +266,6 @@ class UserController {
     }
 
     user.userPet = user.userPet.filter((id) => id.toString() !== petId);
-    await user.save();
 
     await pets.findByIdAndDelete(petId);
 
