@@ -202,7 +202,6 @@ class UserController {
       });
 
       user.userPet.push(newPet._id);
-      await user.save();
 
       res.status(201).json({
         success: true,
@@ -267,7 +266,6 @@ class UserController {
     }
 
     user.userPet = user.userPet.filter((id) => id.toString() !== petId);
-    await user.save();
 
     await pets.findByIdAndDelete(petId);
 
