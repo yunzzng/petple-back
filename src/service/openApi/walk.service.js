@@ -20,6 +20,3 @@ class WalkService {
 }
 
 module.exports = new WalkService();
-ㅁ;
-
-module.exports = new WalkService();
