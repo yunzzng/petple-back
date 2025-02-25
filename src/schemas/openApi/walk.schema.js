@@ -1,15 +1,12 @@
 const mongoose = require("mongoose");
 
-const WalkSchema = new Schema<WalkData>(
-  {
-    startTime: { type: Date, required: true },
-    startLocation: { type: String, required: true },
-    endTime: { type: Date },
-    endLocation: { type: String },
-  },
-  { timestamps: true }
-);
+const WalkSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  petId: { type: String, required: true },
+  startTime: { type: String, required: true },
+  startLocation: { type: String, required: true },
+  endTime: { type: String, required: true },
+  endLocation: { type: String, required: true },
+});
 
-module.exports = mongoose.model("Walk", WalkSchema);
-
-// 사용자 이름, 사진, 강아지 사진 추가
+module.exports =  mongoose.model("Walk", WalkSchema);
