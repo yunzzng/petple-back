@@ -31,19 +31,19 @@ const createUser = async (userData) => {
 const createPet = async (petData) => {
   try {
     const newPet = await pets.create(petData);
-    return newPet;
+    return newPet.toObject();
   } catch (error) {
     throw Error('유저펫 생성 실패' + error.message);
   }
 };
 
 const findByEmail = (userEmail) => {
-  const user = users.findOne({ email: userEmail });
+  const user = users.findOne({ email: userEmail }).lean();
   return user;
 };
 
 const findById = async (userId) => {
-  const user = await users.findOne({ _id: userId });
+  const user = await users.findOne({ _id: userId }).lean();
   return user;
 };
 
@@ -62,20 +62,19 @@ const createNickname = async (userName) => {
 };
 
 const duplication = async (userNickName) => {
-  const nickName = await users.findOne({ nickName: userNickName });
+  const nickName = await users.findOne({ nickName: userNickName }).lean();
 
   if (nickName) {
     return false;
   }
   return true;
 };
-
-const createEmail = async () => {
+onst createEmail = async () => {
   const randomString = Math.random().toString(36).slice(2);
 
   const randomEmail = `kakao_${randomString}@elice.com`;
 
-  const existingEmail = await users.findOne({ email: randomEmail });
+  const existingEmail = await users.findOne({ email: randomEmail }).lean();
   if (!existingEmail) {
     return randomEmail;
   }
@@ -107,7 +106,7 @@ const findUsersByLocation = async (lng, lat) => {
 
 const userPost = async (userId) => {
   try {
-    const userPosts = await posts.find({ creator: userId });
+    const userPosts = await posts.find({ creator: userId }).lean();
     if (userPosts) {
       return userPosts;
     }
@@ -119,7 +118,7 @@ const userPost = async (userId) => {
 
 const likePost = async (userId) => {
   try {
-    const likesPost = await posts.find({ likes: userId });
+    const likesPost = await posts.find({ likes: userId }).lean();
     if (likesPost) {
       return likesPost;
     }
