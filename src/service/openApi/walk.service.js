@@ -1,4 +1,4 @@
-const WalkModel = require("../schemas/walk.schema");
+const WalkModel = require('../schemas/walk.schema');
 
 class WalkService {
   // 산책 기록 저장
@@ -7,7 +7,7 @@ class WalkService {
       const walkRecord = new WalkModel(walkData);
       return await walkRecord.save();
     } catch (error) {
-      throw new Error("산책 데이터를 저장하는 중 오류 발생: " + error.message);
+      throw new Error('산책 데이터를 저장하는 중 오류 발생: ' + error.message);
     }
   }
 
@@ -21,4 +21,5 @@ class WalkService {
   }
 }
 
-module.exports = new WalkService();ㅁ
+module.exports = new WalkService();
+ㅁ;
