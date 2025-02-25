@@ -21,6 +21,6 @@ publicRoutes.get("/kakao/coordinates", kakaoController.getCoordinates); // /publ
 publicRoutes.get("/kakao/map-script", kakaoController.getMapScriptUrl); // /public/kakao/map-script
 
 publicRoutes.post("/walk", walkController.saveWalk);
-publicRoutes.get("/walks/:userId", WalkController.getUserWalks);
+publicRoutes.get("/walks/:userId", walkController.getUserWalks);
 
 module.exports = publicRoutes;
