@@ -38,12 +38,12 @@ const createPet = async (petData) => {
 };
 
 const findByEmail = (userEmail) => {
-  const user = users.findOne({ email: userEmail }).lean();
+  const user = users.findOne({ email: userEmail });
   return user;
 };
 
 const findById = async (userId) => {
-  const user = await users.findOne({ _id: userId }).lean();
+  const user = await users.findOne({ _id: userId });
   return user;
 };
 

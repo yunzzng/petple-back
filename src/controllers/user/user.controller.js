@@ -191,7 +191,7 @@ class UserController {
     const { userId, formData, image } = req.body;
 
     try {
-      const user = await findById(userId);
+      const user = await users.findById(userId);
 
       // 새로운 반려동물 추가
       const newPet = await createPet({
@@ -202,6 +202,7 @@ class UserController {
       });
 
       user.userPet.push(newPet._id);
+      await user.save();
 
       res.status(201).json({
         success: true,
