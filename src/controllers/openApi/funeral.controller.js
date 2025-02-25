@@ -3,9 +3,8 @@ const config = require('../../consts/app');
 const {
   getSeoulFuneralData,
 } = require('../../service/openApi/funeral.service');
-const {
-  formatGyeonggiFuneralData,
-} = require('../../utils/openApi/formatFuneralData');
+const { formatGyeonggiFuneralData } = require('../../utils/openApi/fetchFuneralData');
+
 
 const apiUrls = {
   경기: `${config.externalData.baseUrls.gyeonggi}/DoanmalfunrlPrmisnentrp`,
@@ -17,17 +16,22 @@ class FuneralController {
       const { region } = req.query;
 
       const rawData =
-        region === "경기"
-          ? await axios
-              .get(apiUrls[region], {
-                params: {
-                  KEY: config.externalData.apiKeys.gyeonggi,
-                  Type: 'json',
-                  pIndex: 1,
-                },
-              })
-              .then((res) => res.data?.DoanmalfunrlPrmisnentrp?.[1]?.row || [])
-          : await getSeoulFuneralData();
+      region === "경기"
+        ? await axios
+            .get(apiUrls[region], {
+              params: {
+                KEY: config.externalData.apiKeys.gyeonggi,
+                Type: 'json',
+                pIndex: 1,
+              },
+            })
+            .then((res) => {
+              const dataArray = res.data?.DoanmalfunrlPrmisnentrp || [];
+              const rowData = dataArray.find((item) => item.row)?.row || [];
+    
+              return rowData;
+            })
+        : await getSeoulFuneralData();
 
       return res.status(200).json({
         success: true,

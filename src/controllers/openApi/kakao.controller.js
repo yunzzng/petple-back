@@ -41,7 +41,7 @@ class KakaoController {
   getMapScriptUrl(req, res, next) {
     try {
       if (!config.kakao.apiUrl ?? !config.kakao.apiKey) {
-        throw createError(500, '카카오 지도 API 설정 오류');
+        next(createError(500, '카카오 지도 API 설정 오류'));
       }
       const scriptUrl = `${config.kakao.apiUrl}${config.kakao.apiKey}&autoload=false&libraries=services`;
       return res.json({ success: true, scriptUrl });

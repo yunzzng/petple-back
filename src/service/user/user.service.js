@@ -69,8 +69,7 @@ const duplication = async (userNickName) => {
   }
   return true;
 };
-
-const createEmail = async () => {
+onst createEmail = async () => {
   const randomString = Math.random().toString(36).slice(2);
 
   const randomEmail = `kakao_${randomString}@elice.com`;
