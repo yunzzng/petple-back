@@ -21,8 +21,9 @@ class ChatService {
       const document = await Chat.findOne({ roomId }) //
         .populate({
           path: 'messages.from',
+          populate: { path: 'userPet' },
         })
-        .populate({ path: 'messages.to' })
+        .populate({ path: 'messages.to', populate: { path: 'userPet' } })
         .lean();
       return document;
     } catch (error) {
