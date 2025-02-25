@@ -1,7 +1,6 @@
-const WalkModel = require("../schemas/walk.schema");
+const WalkModel = require("../../schemas/openApi/walk.schema");
 
 class WalkService {
-  // 산책 기록 저장
   async saveWalkData(walkData) {
     try {
       const walkRecord = new WalkModel(walkData);
@@ -11,7 +10,6 @@ class WalkService {
     }
   }
 
-  // 특정 사용자 산책 기록 조회
   async getWalksByUser(userId) {
     try {
       return await WalkModel.find({ userId }).lean();
@@ -21,4 +19,4 @@ class WalkService {
   }
 }
 
-module.exports = new WalkService();ㅁ
+module.exports = new WalkService();
