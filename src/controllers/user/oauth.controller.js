@@ -143,8 +143,8 @@ class OauthController {
       );
 
       const { nickname, profile_image } = userResponse.data.properties;
-      // const { email } = userResponse.data.kakao_account;
-      const email = await createEmail();
+
+      const email = await createEmail(userResponse.data.id);
 
       const user = await findByEmail(email);
 
