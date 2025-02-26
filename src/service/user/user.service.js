@@ -70,10 +70,10 @@ const duplication = async (userNickName) => {
   return true;
 };
 
-const createEmail = async () => {
+const createEmail = async (id) => {
   const randomString = Math.random().toString(36).slice(2);
 
-  const randomEmail = `kakao_${randomString}@elice.com`;
+  const randomEmail = `${id}@elice.com`;
 
   const existingEmail = await users.findOne({ email: randomEmail }).lean();
   if (!existingEmail) {
