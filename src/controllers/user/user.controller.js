@@ -8,6 +8,7 @@ const {
   userPost,
   likePost,
   findUsersByLocation,
+  findUserByNickname,
 } = require('../../service/user/user.service');
 const crypto = require('crypto');
 const { createToken, verifyToken } = require('../../consts/token');
@@ -302,10 +303,24 @@ class UserController {
   }
 
   async getUsersByLocation(req, res, next) {
-    const { lat, lng } = req.body;
+    const { lat, lng } = req.query;
+    if (!lat || !lng) throw createError(400, '위치 정보가 필요합니다.');
     try {
-      const users = await findUsersByLocation(lng, lat);
+      const users = (await findUsersByLocation(lng, lat)) ?? [];
       return res.status(200).json({ success: true, users });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUserByNickname(req, res, next) {
+    const { nickname } = req.params;
+    if (!nickname) {
+      throw createError(400, '유저 정보가 필요합니다.');
+    }
+    try {
+      const user = await findUserByNickname(nickname);
+      return res.status(200).json({ success: true, user });
     } catch (error) {
       next(error);
     }

@@ -1,4 +1,13 @@
+const config = require('./src/consts/app');
+const http = require('http');
 const app = require('./app');
-const PORT = 3000;
+const SocketConfig = require('./src/socket/index');
+const ChatNamespace = require('./src/socket/chat.socket');
+const server = http.createServer(app);
 
-app.listen(3000, () => console.log(`Express Running on ${PORT}`));
+const io = SocketConfig.init(server);
+ChatNamespace(io);
+
+server.listen(config.app.port, () =>
+  console.log(`Express Running on ${config.app.port}`),
+);

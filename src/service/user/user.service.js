@@ -70,10 +70,10 @@ const duplication = async (userNickName) => {
   return true;
 };
 
-const createEmail = async () => {
+const createEmail = async (id) => {
   const randomString = Math.random().toString(36).slice(2);
 
-  const randomEmail = `kakao_${randomString}@elice.com`;
+  const randomEmail = `${id}@elice.com`;
 
   const existingEmail = await users.findOne({ email: randomEmail }).lean();
   if (!existingEmail) {
@@ -129,6 +129,15 @@ const likePost = async (userId) => {
   }
 };
 
+const findUserByNickname = async (nickName) => {
+  try {
+    const document = await users.findOne({ nickName }).lean();
+    return document;
+  } catch (error) {
+    throw createError(500, '[DB에러 UserSerice.findUserByNickname]');
+  }
+};
+
 module.exports = {
   createUser,
   findByEmail,
@@ -139,5 +148,6 @@ module.exports = {
   findUsersByLocation,
   userPost,
   likePost,
+  findUserByNickname,
   createEmail,
 };
