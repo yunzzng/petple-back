@@ -23,6 +23,7 @@ const config = {
     apiKey: process.env.KAKAO_OPEN_API_KEY,
     restApiUrl: process.env.KAKAO_OPEN_REST_API_URL,
     restApiKey: process.env.KAKAO_OPEN_REST_API_KEY,
+    reverseGeocodeUrl: process.env.KAKAO_OPEN_RESERVE_API_URL,
   },
   externalData: {
     baseUrls: {
