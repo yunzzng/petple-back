@@ -1,4 +1,5 @@
-const WalkModel = require('../../schemas/openApi/walk.schema');
+const WalkModel = require("../../schemas/openApi/walk.schema");
+const { createError } = require("../../utils/error");
 
 class WalkService {
   async saveWalkData(walkData) {
@@ -6,15 +7,15 @@ class WalkService {
       const walkRecord = new WalkModel(walkData);
       return await walkRecord.save();
     } catch (error) {
-      throw new Error('산책 데이터를 저장하는 중 오류 발생: ' + error.message);
+      throw createError(500, `산책 데이터를 저장하는 중 오류 발생: ${error.message}`);
     }
   }
 
   async getWalksByUser(userId) {
     try {
-      return await WalkModel.find({ userId }).lean();
+      return await WalkModel.find({ user: userId }).lean();
     } catch (error) {
-      next(error);
+      throw createError(500, `사용자의 산책 데이터를 가져오는 중 오류 발생: ${error.message}`);
     }
   }
 }
