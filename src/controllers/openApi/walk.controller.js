@@ -58,7 +58,13 @@ class WalkController {
 
       return res.status(200).json({
         success: true,
-        walks: userWalks.map(fetchWalkData),
+        walks: userWalks.map((walk) => ({
+          ...fetchWalkData(walk),
+          petName: walk.pet?.name || "알 수 없음",
+          petImage: walk.pet?.image || null,
+          userProfileImage: walk.user?.profileImage || null,
+          duration: walk.duration || "데이터 없음",
+        })),
       });
     } catch (error) {
       next(error);

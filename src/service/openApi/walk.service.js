@@ -13,7 +13,10 @@ class WalkService {
 
   async getWalksByUser(userId) {
     try {
-      return await WalkModel.find({ user: userId }).lean();
+      return await WalkModel.find({ user: userId })
+        .populate('pet', 'name image')
+        .populate('user', 'profileImage')
+        .lean();
     } catch (error) {
       throw createError(500, `사용자의 산책 데이터를 가져오는 중 오류 발생: ${error.message}`);
     }
