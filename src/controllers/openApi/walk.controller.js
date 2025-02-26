@@ -12,6 +12,7 @@ class WalkController {
       const start = new Date(walkData.startTime);
       const end = new Date(walkData.endTime);
 
+      // 총 걸린 시간 구하기
       const diffMs = end - start;
       const hours = Math.floor(diffMs / (1000 * 60 * 60)); // 시간
       const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60)); // 분
