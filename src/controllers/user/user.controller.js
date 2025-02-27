@@ -87,16 +87,6 @@ class UserController {
     }
   }
 
-  async logout(req, res, next) {
-    try {
-      res.clearCookie('token');
-      res.clearCookie('loginStatus');
-      res.status(201).json({ success: true, message: '로그아웃 완료' });
-    } catch (error) {
-      next(error);
-    }
-  }
-
   async getUserInfo(req, res, next) {
     const { token } = req.cookies;
 

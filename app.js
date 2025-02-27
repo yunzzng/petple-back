@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //라우터
-app.use('/api/user', userRoutes);
+app.use('/api/my', userRoutes);
 app.use('/api/oauth', oauthRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/posts', postsRoutes);
