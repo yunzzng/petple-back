@@ -315,11 +315,14 @@ class UserController {
 
   async getUserByNickname(req, res, next) {
     const { nickname } = req.params;
-    if (!nickname) {
-      throw createError(400, '유저 정보가 필요합니다.');
-    }
     try {
+      if (!nickname) {
+        throw createError(400, '유저 정보가 필요합니다.');
+      }
       const user = await findUserByNickname(nickname);
+      if (!user) {
+        throw createError(400, '대화 상대를 찾을 수 없습니다.');
+      }
       return res.status(200).json({ success: true, user });
     } catch (error) {
       next(error);
