@@ -7,6 +7,7 @@ const {
   createUser,
   findByEmail,
   createEmail,
+  findByKakaoId,
 } = require('../../service/user/user.service');
 const { createToken } = require('../../consts/token');
 
@@ -56,6 +57,7 @@ class OauthController {
           email: email,
           nickName: nickName,
           profileImage: picture,
+          provider: 'google',
         });
 
         // await oauthUser.save();
@@ -143,12 +145,12 @@ class OauthController {
       );
 
       const { nickname, profile_image } = userResponse.data.properties;
+      const kakaoId = userResponse.data.id;
 
-      const email = await createEmail(userResponse.data.id);
-
-      const user = await findByEmail(email);
+      const user = await findByKakaoId(kakaoId);
 
       if (!user) {
+        const email = await createEmail();
         const newNickName = await createNickname(nickname);
 
         const oauthUser = await createUser({
@@ -156,6 +158,8 @@ class OauthController {
           email: email,
           nickName: newNickName,
           profileImage: profile_image,
+          provider: 'kakao',
+          kakaoId: userResponse.data.id,
         });
 
         const token = createToken({
@@ -255,6 +259,7 @@ class OauthController {
           email: email,
           nickName: nickName,
           profileImage: profile_image,
+          provider: 'naver',
         });
 
         const token = createToken({
@@ -296,6 +301,16 @@ class OauthController {
       });
 
       return res.redirect(config.app.frontUrl);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async logout(req, res, next) {
+    try {
+      res.clearCookie('token');
+      res.clearCookie('loginStatus');
+      res.status(201).json({ success: true, message: '로그아웃 완료' });
     } catch (error) {
       next(error);
     }

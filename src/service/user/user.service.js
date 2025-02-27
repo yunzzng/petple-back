@@ -28,6 +28,21 @@ const createUser = async (userData) => {
   }
 };
 
+const updateUser = async (userEmail, userData) => {
+  try {
+    const update = await users.findOneAndUpdate(
+      { email: userEmail },
+      userData,
+      {
+        new: true,
+      },
+    );
+    return update;
+  } catch (error) {
+    throw Error('유저 정보 업데이트 실패' + error.message);
+  }
+};
+
 const createPet = async (petData) => {
   try {
     const newPet = await pets.create(petData);
@@ -37,13 +52,29 @@ const createPet = async (petData) => {
   }
 };
 
+const updatePet = async (petId, petData) => {
+  try {
+    const update = await pets.findOneAndUpdate({ _id: petId }, petData, {
+      new: true,
+    });
+    return update.toObject();
+  } catch (error) {
+    throw Error('유저 펫 정보 업데이트 실패' + error.message);
+  }
+};
+
 const findByEmail = (userEmail) => {
   const user = users.findOne({ email: userEmail });
   return user;
 };
 
-const findById = async (userId) => {
-  const user = await users.findOne({ _id: userId });
+const findById = (userId) => {
+  const user = users.findOne({ _id: userId });
+  return user;
+};
+
+const findByKakaoId = (kakaoId) => {
+  const user = users.findOne({ kakaoId: kakaoId });
   return user;
 };
 
@@ -70,12 +101,13 @@ const duplication = async (userNickName) => {
   return true;
 };
 
-const createEmail = async (id) => {
+const createEmail = async () => {
+  const existingEmail = await users.findOne({ email: randomEmail }).lean();
+
   const randomString = Math.random().toString(36).slice(2);
 
-  const randomEmail = `${id}@elice.com`;
+  const randomEmail = `${randomString}@elice.com`;
 
-  const existingEmail = await users.findOne({ email: randomEmail }).lean();
   if (!existingEmail) {
     return randomEmail;
   }
@@ -150,4 +182,7 @@ module.exports = {
   likePost,
   findUserByNickname,
   createEmail,
+  findByKakaoId,
+  updatePet,
+  updateUser,
 };

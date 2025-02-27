@@ -49,6 +49,15 @@ const userSchema = new mongoose.Schema(
         },
       },
     },
+    provider: {
+      type: String,
+      enum: ['google', 'kakao', 'naver'],
+      required: true,
+    },
+    kakaoId: {
+      type: Number,
+      required: false,
+    },
   },
   {
     timestamps: true,

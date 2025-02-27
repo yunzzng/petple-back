@@ -9,6 +9,8 @@ const {
   likePost,
   findUsersByLocation,
   findUserByNickname,
+  updatePet,
+  updateUser,
 } = require('../../service/user/user.service');
 const crypto = require('crypto');
 const { createToken, verifyToken } = require('../../consts/token');
@@ -85,16 +87,6 @@ class UserController {
     }
   }
 
-  async logout(req, res, next) {
-    try {
-      res.clearCookie('token');
-      res.clearCookie('loginStatus');
-      res.status(201).json({ success: true, message: '로그아웃 완료' });
-    } catch (error) {
-      next(error);
-    }
-  }
-
   async getUserInfo(req, res, next) {
     const { token } = req.cookies;
 
@@ -150,7 +142,7 @@ class UserController {
   }
 
   async updateUserInfo(req, res, next) {
-    const { userNickName, profileImg, userEmail, selectedAddress } = req.body;
+    const { userNickName, profileImage, userEmail, selectedAddress } = req.body;
     const { token } = req.cookies;
 
     try {
@@ -158,21 +150,17 @@ class UserController {
         throw createError(400, '토큰 인증 실패');
       }
 
-      const updateInfo = await users.findOneAndUpdate(
-        { email: userEmail },
-        {
-          nickName: userNickName,
-          profileImage: profileImg,
-          address: {
-            jibunAddress: selectedAddress.jibunAddress,
-            location: {
-              type: selectedAddress.location.type,
-              coordinates: selectedAddress.location.coordinates,
-            },
+      const updateInfo = await updateUser(userEmail, {
+        nickName: userNickName,
+        profileImage: profileImage,
+        address: {
+          jibunAddress: selectedAddress.jibunAddress,
+          location: {
+            type: selectedAddress.location.type,
+            coordinates: selectedAddress.location.coordinates,
           },
         },
-        { new: true },
-      );
+      });
 
       if (!updateInfo) {
         throw createError(404, '유저 정보가 없습니다.');
@@ -192,7 +180,7 @@ class UserController {
     const { userId, formData, image } = req.body;
 
     try {
-      const user = await users.findById(userId);
+      const user = await findById(userId);
 
       // 새로운 반려동물 추가
       const newPet = await createPet({
@@ -226,31 +214,26 @@ class UserController {
 
     try {
       // 기존 반려동물 프로필 수정
-      const updatePet = await pets.findOneAndUpdate(
-        { _id: petId },
-        {
-          name: userPet.name,
-          age: userPet.age,
-          breed: userPet.breed,
-          gender: userPet.gender,
-          image: petImage,
-        },
-        { new: true },
-      );
+      const updatedPet = await updatePet(petId, {
+        name: userPet.name,
+        age: userPet.age,
+        breed: userPet.breed,
+        image: petImage,
+      });
 
       if (!updatePet) {
-        throw createError(404, '반려동물을 찾을 수 없습니다.');
+        throw createError(404, '반려동물을 찾을 수 없습니다, 업데이트 실패');
       }
 
       res.status(201).json({
         success: true,
         message: '반려동물 정보가 업데이트되었습니다.',
         pet: {
-          _id: updatePet._id,
-          age: updatePet.age,
-          name: updatePet.name,
-          image: updatePet.image,
-          breed: updatePet.breed,
+          _id: updatedPet._id,
+          age: updatedPet.age,
+          name: updatedPet.name,
+          image: updatedPet.image,
+          breed: updatedPet.breed,
         },
       });
     } catch (error) {
