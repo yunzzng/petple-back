@@ -15,8 +15,8 @@ const {
 const crypto = require('crypto');
 const { createToken, verifyToken } = require('../../consts/token');
 const { createError } = require('../../utils/error');
-const users = require('../../schemas/user/user.schema');
 const pets = require('../../schemas/pet/pet.schema');
+const config = require('../../consts/app');
 
 class UserController {
   async signup(req, res, next) {
@@ -308,6 +308,40 @@ class UserController {
       }
       return res.status(200).json({ success: true, user });
     } catch (error) {
+      next(error);
+    }
+  }
+
+  async getCoordinate(req, res, next) {
+    try {
+      const { address } = req.params;
+
+      if (!address) {
+        throw createError(400, '주소가 필요합니다.');
+      }
+
+      const apiKey = config.externalData.apiKeys.vword;
+
+      const encodedAddress = encodeURIComponent(address);
+      const apiUrl = `https://api.vworld.kr/req/address?service=address&request=getcoord&version=2.0&crs=epsg:4326&address=${encodedAddress}&refine=true&simple=false&format=json&type=road&key=${apiKey}`;
+
+      const response = await fetch(apiUrl, {
+        headers: {
+          Accept: 'application/json',
+        },
+        cache: 'no-store',
+      });
+
+      const data = await response.json();
+
+      if (!data) {
+        throw createError(400, '주소 좌표 변환 실패');
+      }
+
+      const point = data.response.result.point;
+      res.json({ x: point.x, y: point.y });
+    } catch (error) {
+      console.error('좌표 변환 오류:', error);
       next(error);
     }
   }
