@@ -35,6 +35,14 @@ class CommentService {
     }
   }
 
+  async deleteCommentsByPostId(postId) {
+    try {
+      await Comment.deleteMany({ post: postId });
+    } catch (error) {
+      throw createError(500, `[DB에러] CommentService.getCommentById`);
+    }
+  }
+
   async updateComment(id, description) {
     try {
       await Comment.findByIdAndUpdate(id, { description });
