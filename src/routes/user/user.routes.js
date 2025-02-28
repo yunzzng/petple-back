@@ -11,5 +11,6 @@ userRoutes.delete('/pet/:petId', token, UserController.deletePetInfo); // /api/m
 userRoutes.get('/posts/get', token, UserController.getUserPosts); // /api/my/posts/get
 userRoutes.get('/near', UserController.getUsersByLocation);
 userRoutes.get('/:nickname', UserController.getUserByNickname);
+userRoutes.get('/coordinate/:address', UserController.getCoordinate);
 
 module.exports = userRoutes;

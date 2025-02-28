@@ -79,17 +79,21 @@ const findByKakaoId = (kakaoId) => {
 };
 
 const createNickname = async (userName) => {
-  const randomEmotion = emotion[Math.floor(Math.random() * emotion.length)];
-  const randomNum = Math.floor(Math.random() * 9000 + 1);
+  try {
+    const randomEmotion = emotion[Math.floor(Math.random() * emotion.length)];
+    const randomNum = Math.floor(Math.random() * 9000 + 1);
 
-  const randomNickname = `${randomEmotion}${userName}${randomNum}`;
+    const randomNickname = `${randomEmotion}${userName}${randomNum}`;
 
-  const checkNickname = await duplication(randomNickname);
+    const checkNickname = await duplication(randomNickname);
 
-  if (checkNickname) {
-    return randomNickname;
+    if (checkNickname) {
+      return randomNickname;
+    }
+    return await createNickname(userName);
+  } catch (error) {
+    throw Error('랜덤닉네임 생성 실패' + error.message);
   }
-  return await createNickname(userName);
 };
 
 const duplication = async (userNickName) => {
@@ -102,17 +106,21 @@ const duplication = async (userNickName) => {
 };
 
 const createEmail = async () => {
-  const existingEmail = await users.findOne({ email: randomEmail }).lean();
+  try {
+    const randomString = Math.random().toString(36).slice(2);
 
-  const randomString = Math.random().toString(36).slice(2);
+    const randomEmail = `${randomString}@elice.com`;
 
-  const randomEmail = `${randomString}@elice.com`;
+    const existingEmail = await users.findOne({ email: randomEmail }).lean();
 
-  if (!existingEmail) {
-    return randomEmail;
+    if (!existingEmail) {
+      return randomEmail;
+    }
+
+    return await createEmail();
+  } catch (error) {
+    throw Error(400, '랜덤 이메일 생성 실패');
   }
-
-  return await createEmail();
 };
 
 const findUsersByLocation = async (lng, lat) => {

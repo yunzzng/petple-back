@@ -39,6 +39,7 @@ const config = {
       seoul: process.env.OPEN_SEOUL_API_KEY,
       place: process.env.PLACE_OPEN_API_KEY,
       food: process.env.FOOD_OPEN_API_KEY,
+      vword: process.env.VWORLD_API_KEY,
     },
   },
   oauth: {
