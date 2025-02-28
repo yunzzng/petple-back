@@ -84,18 +84,18 @@ class PostController {
   }
 
   async deletePost(req, res, next) {
-    const { id } = req.params;
-    const post = req.body;
+    const { id: postId } = req.params;
     const { _id: requestUserId } = req.user;
-    if (!id) {
+    if (!postId) {
       return next(createError(400, '게시글 정보가 필요합니다.'));
     }
     try {
-      const { creator } = await PostService.getPostById(id);
+      const { creator } = await PostService.getPostById(postId);
       if (creator._id.toString() !== requestUserId.toString()) {
         return next(createError(401, '게시글 삭제 권한이 없습니다.'));
       }
-      await PostService.deletePostById(id, post);
+      await PostService.deletePostById(postId);
+      await CommentService.deleteCommentsByPostId(postId);
       return res
         .status(204)
         .json({ success: true, message: '게시글 삭제 성공' });
