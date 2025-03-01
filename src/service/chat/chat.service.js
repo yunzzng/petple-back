@@ -18,12 +18,17 @@ class ChatService {
 
   async findChatByRoomId(roomId) {
     try {
-      const document = await Chat.findOne({ roomId }) //
+      const document = await Chat.findOne({ roomId }, 'roomId messages.text') //
         .populate({
           path: 'messages.from',
-          populate: { path: 'userPet' },
+          select: 'name nickName profileImage',
+          populate: { path: 'userPet', select: 'name image' },
         })
-        .populate({ path: 'messages.to', populate: { path: 'userPet' } })
+        .populate({
+          path: 'messages.to',
+          select: 'name nickName profileImage',
+          populate: { path: 'userPet', select: 'name image' },
+        })
         .lean();
       return document;
     } catch (error) {

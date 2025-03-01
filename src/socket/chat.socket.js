@@ -6,8 +6,6 @@ const ChatNamespace = (io) => {
   chatNamespace.on('connection', (socket) => {
     socket.on('join_room', async (roomId) => {
       socket.join(roomId);
-      const chat = await ChatService.findChatByRoomId(roomId);
-      socket.emit('prev_message', chat);
     });
 
     socket.on('send_message', async ({ roomId, text, from, to }) => {

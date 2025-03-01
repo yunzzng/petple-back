@@ -9,6 +9,7 @@ const imageRoutes = require('./src/routes/image/image.routes');
 const postsRoutes = require('./src/routes/post/post.routes');
 const commentRoutes = require('./src/routes/comment/comment.routes');
 const publicRoutes = require('./src/routes/openApi/public.routes');
+const chatRoutes = require('./src/routes/chat/chat.routes');
 
 const app = express();
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use('/api/images', imageRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/chat', chatRoutes);
 
 //에러핸들러
 app.use(errorHandler);
