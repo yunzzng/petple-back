@@ -126,18 +126,21 @@ const createEmail = async () => {
 const findUsersByLocation = async (lng, lat) => {
   try {
     const documents = await users
-      .find({
-        'address.location': {
-          $near: {
-            $geometry: {
-              type: 'Point',
-              coordinates: [lng, lat],
+      .find(
+        {
+          'address.location': {
+            $near: {
+              $geometry: {
+                type: 'Point',
+                coordinates: [lng, lat],
+              },
+              $maxDistance: 3000,
             },
-            $maxDistance: 3000,
           },
         },
-      })
-      .populate('userPet')
+        '-userType -createdAt -updatedAt -__v',
+      )
+      .populate('userPet', '-_id -__v')
       .lean();
     return documents;
   } catch (error) {
