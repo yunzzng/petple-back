@@ -174,7 +174,10 @@ const likePost = async (userId) => {
 
 const findUserByNickname = async (nickName) => {
   try {
-    const document = await users.findOne({ nickName }).lean();
+    const document = await users
+      .findOne({ nickName }, 'userPet nickName name profileImage')
+      .populate('userPet', '-__v -_id')
+      .lean();
     return document;
   } catch (error) {
     throw createError(500, '[DB에러 UserSerice.findUserByNickname]');
