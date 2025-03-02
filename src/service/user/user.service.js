@@ -126,18 +126,21 @@ const createEmail = async () => {
 const findUsersByLocation = async (lng, lat) => {
   try {
     const documents = await users
-      .find({
-        'address.location': {
-          $near: {
-            $geometry: {
-              type: 'Point',
-              coordinates: [lng, lat],
+      .find(
+        {
+          'address.location': {
+            $near: {
+              $geometry: {
+                type: 'Point',
+                coordinates: [lng, lat],
+              },
+              $maxDistance: 3000,
             },
-            $maxDistance: 3000,
           },
         },
-      })
-      .populate('userPet')
+        '-userType -createdAt -updatedAt -__v',
+      )
+      .populate('userPet', '-_id -__v')
       .lean();
     return documents;
   } catch (error) {
@@ -171,7 +174,10 @@ const likePost = async (userId) => {
 
 const findUserByNickname = async (nickName) => {
   try {
-    const document = await users.findOne({ nickName }).lean();
+    const document = await users
+      .findOne({ nickName }, 'userPet nickName name profileImage')
+      .populate('userPet', '-__v -_id')
+      .lean();
     return document;
   } catch (error) {
     throw createError(500, '[DB에러 UserSerice.findUserByNickname]');
