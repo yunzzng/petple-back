@@ -68,7 +68,12 @@ class PostService {
         .populate('creator', 'name nickName profileImage')
         .populate({
           path: 'comments',
-          populate: { path: 'creator' },
+          select: '-hasParent -updatedAt -__v',
+          populate: {
+            path: 'creator',
+            select:
+              '-userType -createdAt -updatedAt -__v -address -password -userPet',
+          },
         })
         .lean();
       return document;
