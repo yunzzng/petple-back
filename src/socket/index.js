@@ -6,7 +6,12 @@ class SocketConfig {
   }
 
   init(server) {
-    this.io = new Server(server);
+    this.io = new Server(server, {
+      cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+      },
+    });
     console.log('Socket.io init');
     return this.io;
   }
