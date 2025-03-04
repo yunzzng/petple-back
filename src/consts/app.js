@@ -47,6 +47,21 @@ const config = {
     google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_CLIENT_CALLBACK_URL}&response_type=code&scope=email profile`,
     naver: `https://nid.naver.com/oauth2.0/authorize?client_id=${process.env.NAVER_OAUTH_CLIENT_ID}&response_type=code&redirect_uri=${process.env.NAVER_OAUTH_REDIRECT_URI}&state=${state}`,
   },
+  emotion: [
+    '행복한',
+    '즐거운',
+    '기쁜',
+    '신나는',
+    '고마운',
+    '상냥한',
+    '포근한',
+    '친숙한',
+    '쾌활한',
+    '뿌듯한',
+    '귀여운',
+    '멋진',
+    '설레는',
+  ],
 };
 
 module.exports = config;
