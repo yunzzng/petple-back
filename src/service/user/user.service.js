@@ -148,25 +148,37 @@ const findUsersByLocation = async (lng, lat) => {
   }
 };
 
-const userPost = async (userId) => {
+const userPost = async (userId, page, pageSize) => {
   try {
-    const userPosts = await posts.find({ creator: userId }).lean();
-    if (userPosts) {
-      return userPosts;
-    }
-    return [];
+    const skipPosts = (page - 1) * pageSize;
+    const userPosts = await posts
+      .find({ creator: userId })
+      .skip(skipPosts)
+      .limit(pageSize)
+      .lean();
+
+    const totalPosts = await posts.countDocuments({ creator: userId });
+    const totalPages = Math.ceil(totalPosts / pageSize);
+
+    return { posts: userPosts, totalPages };
   } catch (error) {
     throw Error(error.message);
   }
 };
 
-const likePost = async (userId) => {
+const likePost = async (userId, page, pageSize) => {
   try {
-    const likesPost = await posts.find({ likes: userId }).lean();
-    if (likesPost) {
-      return likesPost;
-    }
-    return [];
+    const skipPosts = (page - 1) * pageSize;
+    const likesPost = await posts
+      .find({ likes: userId })
+      .skip(skipPosts)
+      .limit(pageSize)
+      .lean();
+
+    const totalPosts = await posts.countDocuments({ likes: userId });
+    const totalPages = Math.ceil(totalPosts / pageSize);
+
+    return { posts: likesPost, totalPages };
   } catch (error) {
     throw Error(error.message);
   }
