@@ -257,34 +257,6 @@ class UserController {
     res.status(201).json({ success: true, message: '반려동물 정보 삭제 성공' });
   }
 
-  async getUserPosts(req, res, next) {
-    const { token } = req.cookies;
-    const decodedToken = await verifyToken(token);
-
-    const userId = decodedToken.userId;
-
-    const user = await findById(userId);
-    if (!user) {
-      throw createError(404, '유저 정보가 없습니다.');
-    }
-
-    try {
-      const [myPost, myLikePost] = await Promise.all([
-        userPost(userId),
-        likePost(userId),
-      ]);
-
-      return res.status(200).json({
-        success: true,
-        message: '게시물 조회 성공',
-        posts: myPost,
-        likePosts: myLikePost,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
   async getUsersByLocation(req, res, next) {
     const { lat, lng } = req.query;
     if (!lat || !lng) throw createError(400, '위치 정보가 필요합니다.');
