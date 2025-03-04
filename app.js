@@ -1,5 +1,6 @@
 require('./db_init');
 require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const errorHandler = require('./src/middleware/errorHandler');
@@ -15,6 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 
 //라우터
 app.use('/api/my', userRoutes);
