@@ -1,9 +1,7 @@
 const axios = require('axios');
 const config = require('../../consts/app');
-const {
-  getSeoulFuneralData,
-} = require('../../service/openApi/funeral.service');
 const { formatGyeonggiFuneralData } = require('../../utils/openApi/fetchFuneralData');
+const funeralService = require('../../service/openApi/funeral.service');
 
 
 const apiUrls = {
@@ -31,7 +29,7 @@ class FuneralController {
     
               return rowData;
             })
-        : await getSeoulFuneralData();
+        : await funeralService.getSeoulFuneralData();
 
       return res.status(200).json({
         success: true,
