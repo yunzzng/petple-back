@@ -67,6 +67,15 @@ class UserSerice {
     return user;
   }
 
+  async duplication(userNickName) {
+    const nickName = await users.findOne({ nickName: userNickName }).lean();
+
+    if (nickName) {
+      return false;
+    }
+    return true;
+  }
+
   async createNickname(userName) {
     try {
       const randomEmotion =
@@ -75,7 +84,7 @@ class UserSerice {
 
       const randomNickname = `${randomEmotion}${userName}${randomNum}`;
 
-      const checkNickname = await duplication(randomNickname);
+      const checkNickname = await this.duplication(randomNickname);
 
       if (checkNickname) {
         return randomNickname;
@@ -84,15 +93,6 @@ class UserSerice {
     } catch (error) {
       throw Error('랜덤닉네임 생성 실패' + error.message);
     }
-  }
-
-  async duplication(userNickName) {
-    const nickName = await users.findOne({ nickName: userNickName }).lean();
-
-    if (nickName) {
-      return false;
-    }
-    return true;
   }
 
   async createEmail() {
