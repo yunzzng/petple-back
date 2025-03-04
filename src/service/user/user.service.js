@@ -143,6 +143,7 @@ class UserSerice {
       const skipPosts = (page - 1) * pageSize;
       const userPosts = await posts
         .find({ creator: userId })
+        .sort({ createdAt: -1 })
         .skip(skipPosts)
         .limit(pageSize)
         .lean();
@@ -161,6 +162,7 @@ class UserSerice {
       const skipPosts = (page - 1) * pageSize;
       const likesPost = await posts
         .find({ likes: userId })
+        .sort({ createdAt: -1 })
         .skip(skipPosts)
         .limit(pageSize)
         .lean();
