@@ -2,22 +2,7 @@ const users = require('../../schemas/user/user.schema');
 const pets = require('../../schemas/pet/pet.schema');
 const { createError } = require('../../utils/error');
 const posts = require('../../schemas/post/post.schema');
-
-const emotion = [
-  '행복한',
-  '즐거운',
-  '기쁜',
-  '신나는',
-  '고마운',
-  '상냥한',
-  '포근한',
-  '친숙한',
-  '쾌활한',
-  '뿌듯한',
-  '귀여운',
-  '멋진',
-  '설레는',
-];
+const config = require('../../consts/app');
 
 const createUser = async (userData) => {
   try {
@@ -80,7 +65,8 @@ const findByKakaoId = (kakaoId) => {
 
 const createNickname = async (userName) => {
   try {
-    const randomEmotion = emotion[Math.floor(Math.random() * emotion.length)];
+    const randomEmotion =
+      config.emotion[Math.floor(Math.random() * config.emotion.length)];
     const randomNum = Math.floor(Math.random() * 9000 + 1);
 
     const randomNickname = `${randomEmotion}${userName}${randomNum}`;
