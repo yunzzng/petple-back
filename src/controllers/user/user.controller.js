@@ -1,17 +1,4 @@
-const {
-  createUser,
-  findByEmail,
-  createNickname,
-  duplication,
-  findById,
-  createPet,
-  userPost,
-  likePost,
-  findUsersByLocation,
-  findUserByNickname,
-  updatePet,
-  updateUser,
-} = require('../../service/user/user.service');
+const UserSerice = require('../../service/user/user.service');
 const crypto = require('crypto');
 const { createToken, verifyToken } = require('../../consts/token');
 const { createError } = require('../../utils/error');
@@ -28,15 +15,15 @@ class UserController {
       .digest('base64');
 
     try {
-      const existingUser = await findByEmail(email);
+      const existingUser = await UserSerice.findByEmail(email);
 
-      const randomNickname = await createNickname(name);
+      const randomNickname = await UserSerice.createNickname(name);
 
       if (existingUser) {
         throw createError(409, '이미 존재하는 이메일');
       }
 
-      await createUser({
+      await UserSerice.createUser({
         name: name,
         email: email,
         password: hashedPassword,
@@ -53,7 +40,7 @@ class UserController {
     const { email } = req.body;
 
     try {
-      const user = await findByEmail(email);
+      const user = await UserSerice.findByEmail(email);
       if (!user) {
         throw createError(404, '가입된 회원 정보가 없습니다.');
       }
@@ -99,9 +86,7 @@ class UserController {
 
       const email = decodedToken.email;
 
-      const user = await findByEmail(email)
-        .populate('userPet')
-        .populate('address');
+      const user = await UserSerice.findByEmail(email);
 
       if (!user) {
         throw createError(404, '유저 정보가 없습니다!');
@@ -128,7 +113,7 @@ class UserController {
     const { nickName } = req.body;
 
     try {
-      const confirm = await duplication(nickName);
+      const confirm = await UserSerice.duplication(nickName);
 
       if (!confirm) {
         throw createError(409, '이미 사용중인 닉네임 입니다.');
@@ -150,7 +135,7 @@ class UserController {
         throw createError(400, '토큰 인증 실패');
       }
 
-      const updateInfo = await updateUser(userEmail, {
+      const updateInfo = await UserSerice.updateUser(userEmail, {
         nickName: userNickName,
         profileImage: profileImage,
         address: {
@@ -180,10 +165,10 @@ class UserController {
     const { userId, formData, image } = req.body;
 
     try {
-      const user = await findById(userId);
+      const user = await UserSerice.findById(userId);
 
       // 새로운 반려동물 추가
-      const newPet = await createPet({
+      const newPet = await UserSerice.createPet({
         name: formData.name,
         age: formData.age,
         breed: formData.breed,
@@ -214,14 +199,14 @@ class UserController {
 
     try {
       // 기존 반려동물 프로필 수정
-      const updatedPet = await updatePet(petId, {
+      const updatedPet = await UserSerice.updatePet(petId, {
         name: userPet.name,
         age: userPet.age,
         breed: userPet.breed,
         image: petImage,
       });
 
-      if (!updatePet) {
+      if (!updatedPet) {
         throw createError(404, '반려동물을 찾을 수 없습니다, 업데이트 실패');
       }
 
@@ -244,7 +229,7 @@ class UserController {
   async deletePetInfo(req, res, next) {
     const { userId, petId } = req.body;
 
-    const user = await findById(userId);
+    const user = await UserSerice.findById(userId);
 
     if (!user) {
       throw createError(404, '유저 정보가 없습니다.');
@@ -261,7 +246,7 @@ class UserController {
     const { lat, lng } = req.query;
     if (!lat || !lng) throw createError(400, '위치 정보가 필요합니다.');
     try {
-      const users = (await findUsersByLocation(lng, lat)) ?? [];
+      const users = (await UserSerice.findUsersByLocation(lng, lat)) ?? [];
       return res.status(200).json({ success: true, users });
     } catch (error) {
       next(error);
@@ -274,7 +259,7 @@ class UserController {
       if (!nickname) {
         throw createError(400, '유저 정보가 필요합니다.');
       }
-      const user = await findUserByNickname(nickname);
+      const user = await UserSerice.findUserByNickname(nickname);
       if (!user) {
         throw createError(400, '대화 상대를 찾을 수 없습니다.');
       }
