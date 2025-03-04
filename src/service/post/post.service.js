@@ -65,7 +65,7 @@ class PostService {
   async getPostById(postId) {
     try {
       const document = await Post.findById(postId, '-updatedAt -__v')
-        .populate('creator', 'name nickName profileImage -_id')
+        .populate('creator', 'name nickName profileImage')
         .populate({
           path: 'comments',
           populate: { path: 'creator' },
