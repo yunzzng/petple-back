@@ -59,7 +59,7 @@ class CommentController {
       await CommentService.addReply(targetCommentId, {
         _id: user._id,
         name: user.name,
-        nickname: user.nickName,
+        nickName: user.nickName,
         profileImage: user.profileImage,
         email: user.email,
         description,
