@@ -1,5 +1,6 @@
 const CommentService = require('../../service/comment/comment.service');
 const PostService = require('../../service/post/post.service');
+const UserService = require('../../service/user/user.service');
 const {
   userPost,
   likePost,
@@ -153,7 +154,7 @@ class PostController {
 
     const pageSize = 9;
 
-    const user = await findUserByNickname(nickName);
+    const user = await UserService.findUserByNickname(nickName);
     if (!user) {
       throw createError(404, '유저 정보가 없습니다.');
     }
@@ -178,7 +179,7 @@ class PostController {
     const { nickName } = req.params;
     const pageSize = 9;
 
-    const user = await findUserByNickname(nickName);
+    const user = await UserService.findUserByNickname(nickName);
     if (!user) {
       throw createError(404, '유저 정보가 없습니다.');
     }
