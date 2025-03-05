@@ -4,7 +4,7 @@ const { createError } = require('../../utils/error');
 const posts = require('../../schemas/post/post.schema');
 const config = require('../../consts/app');
 
-class UserSerice {
+class UserService {
   async createUser(userData) {
     try {
       const newUser = await users.create(userData);
@@ -134,7 +134,7 @@ class UserSerice {
         .lean();
       return documents;
     } catch (error) {
-      throw createError(500, '[DB에러 UserSerice.findByUsersByLocation]');
+      throw createError(500, '[DB에러 UserService.findByUsersByLocation]');
     }
   }
 
@@ -184,9 +184,9 @@ class UserSerice {
         .lean();
       return document;
     } catch (error) {
-      throw createError(500, '[DB에러 UserSerice.findUserByNickname]');
+      throw createError(500, '[DB에러 UserService.findUserByNickname]');
     }
   }
 }
 
-module.exports = new UserSerice();
+module.exports = new UserService();

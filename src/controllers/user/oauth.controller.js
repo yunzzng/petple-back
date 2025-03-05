@@ -2,7 +2,7 @@ const { default: axios } = require('axios');
 const { createError } = require('../../utils/error');
 const users = require('../../schemas/user/user.schema');
 const config = require('../../consts/app');
-const UserSerice = require('../../service/user/user.service');
+const UserService = require('../../service/user/user.service');
 const { createToken } = require('../../consts/token');
 
 class OauthController {
@@ -41,12 +41,12 @@ class OauthController {
 
       const { email, name, picture } = userResponse.data;
 
-      const user = await UserSerice.findByEmail(email);
+      const user = await UserService.findByEmail(email);
       // 처음 로그인한 유저이면 새로 생성
       if (!user) {
-        const nickName = await UserSerice.createNickname(name);
+        const nickName = await UserService.createNickname(name);
 
-        const oauthUser = await UserSerice.createUser({
+        const oauthUser = await UserService.createUser({
           name: name,
           email: email,
           nickName: nickName,
@@ -141,13 +141,13 @@ class OauthController {
       const { nickname, profile_image } = userResponse.data.properties;
       const kakaoId = userResponse.data.id;
 
-      const user = await UserSerice.findByKakaoId(kakaoId);
+      const user = await UserService.findByKakaoId(kakaoId);
 
       if (!user) {
-        const email = await UserSerice.createEmail();
-        const newNickName = await UserSerice.createNickname(nickname);
+        const email = await UserService.createEmail();
+        const newNickName = await UserService.createNickname(nickname);
 
-        const oauthUser = await UserSerice.createUser({
+        const oauthUser = await UserService.createUser({
           name: nickname,
           email: email,
           nickName: newNickName,
@@ -243,12 +243,12 @@ class OauthController {
 
       const { name, email, profile_image } = userResponse.data.response;
 
-      const user = await UserSerice.findByEmail(email);
+      const user = await UserService.findByEmail(email);
 
       if (!user) {
-        const nickName = await UserSerice.createNickname(name);
+        const nickName = await UserService.createNickname(name);
 
-        const oauthUser = await UserSerice.createUser({
+        const oauthUser = await UserService.createUser({
           name: name,
           email: email,
           nickName: nickName,
