@@ -1,11 +1,7 @@
 const CommentService = require('../../service/comment/comment.service');
 const PostService = require('../../service/post/post.service');
 const UserService = require('../../service/user/user.service');
-const {
-  userPost,
-  likePost,
-  findUserByNickname,
-} = require('../../service/user/user.service');
+
 const { createError } = require('../../utils/error');
 
 class PostController {
@@ -162,7 +158,7 @@ class PostController {
     const userId = user._id;
 
     try {
-      const userPosts = await userPost(userId, page, pageSize);
+      const userPosts = await UserService.userPost(userId, page, pageSize);
 
       return res.status(200).json({
         success: true,
@@ -187,7 +183,7 @@ class PostController {
     const userId = user._id;
 
     try {
-      const likePosts = await likePost(userId, page, pageSize);
+      const likePosts = await UserService.likePost(userId, page, pageSize);
 
       return res.status(200).json({
         success: true,
