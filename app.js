@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'https://petple-front-vert.vercel.app/',
+    origin: 'https://petple-front-vert.vercel.app',
     credentials: true,
   }),
 );
