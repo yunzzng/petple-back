@@ -1,6 +1,6 @@
 # 🐾 PetPle
 
-**PetPle**은 반려동물이라는 공통 관심사를 가진 사용자들을 위한 커뮤니티 및 다양한 서비스를 제공하는 웹 애플리케이션으로, 프론트엔드와 백엔드를 직접 설계하고 구현한 풀스택 프로젝트입니다.
+**PetPle**Petple(펫플)은 반려인을 위한 종합 서비스로, 반려동물과 함께하는 삶을 더욱 편리하고 즐겁게 만들어주는 웹 서비스입니다. 사용자에게 유용한 정보를 제공하고, 편리한 기능을 통해 반려동물과의 생활을 지원하는 것이 본 프로젝트의 목표입니다. 직관적인 UI/UX를 제공하고, 다양한 기능을 통합하여 사용자 경험을 극대화하는 데 중점을 두었습니다.
 
 ## 🚀 기술 스택
 ### Frontend
@@ -26,10 +26,10 @@
 - [**GitLab Runner, Docker, Nginx를 활용한 CI/CD 및 프론트엔드·백엔드 배포 자동화**](https://github.com/DonggunLim/Petple_front/wiki/GitLab-Runner%EC%99%80-Docker%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-CI-CD-%EA%B5%AC%EC%B6%95)
 
 ## 📌 링크
-- **Frontend Repository**: [PetPle Frontend](https://github.com/DonggunLim/Petple_front)
-- **Backend Repository**: [PetPle Backend](https://github.com/DonggunLim/Petple_back)
-- **Figma**: [Petple Figma](https://www.figma.com/design/ahpLVeWiIlr8GCGUPpK6O9/Elice?node-id=0-1&p=f&t=MHiTenmrguVvYXF2-0)
-- **WebSite**: [Petple](https://petple-front.vercel.app)
+- **Frontend Repository**: [PetPle Frontend](https://github.com/yunzzng/petple-front)
+- **Backend Repository**: [PetPle Backend](https://github.com/yunzzng/petple-back)
+- **Figma**: [Petple Figma](https://www.figma.com/design/S8pxuYVx3NXhtFZJC7FrYU/elice-project3?node-id=0-1&p=f)
+- **WebSite**: [Petple](https://petple-front-vert.vercel.app/)
 ## 📌 설치 및 실행 방법
 
 ### 프론트엔드 실행
